@@ -5,45 +5,25 @@
  * @format
  */
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 
-import axios from 'axios';
-import {useEffect, useState} from 'react';
-import {BackView} from './src/views/Back/BackView';
-const instance = axios.create({
-  baseURL: 'https://exercisedb.p.rapidapi.com/exercises/',
-  timeout: 1000,
-  headers: {
-    'X-RapidAPI-Key': '16aebbac70msh81aa02278bca4ddp179321jsncc2788d06127',
-    'X-RapidAPI': 'Host:exercisedb.p.rapidapi.com',
-  },
-});
+import {Provider as PaperProvider, Text, TextInput} from 'react-native-paper';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {NavigationContainer} from '@react-navigation/native';
+import {Home} from './src/views/Home/Home';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [, setBodyParts] = useState<string[]>();
-
-  useEffect(() => {
-    instance
-      .get('bodyPartList')
-      .then(result => setBodyParts(result.data))
-      .catch(error => console.log(error));
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <BackView />
-    </View>
+    <SafeAreaProvider>
+      <PaperProvider>
+        <Home />
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 // import type {PropsWithChildren} from 'react';
 // import {
 //   SafeAreaView,

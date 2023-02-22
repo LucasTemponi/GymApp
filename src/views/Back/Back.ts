@@ -1,4 +1,10 @@
-export type Exercice = Record<string,string>
+export type Exercice = {
+    equipment:string,
+    gifUrl:string,
+    id:string,
+    name:string
+    target:string
+}
 export const exercices = [
     {
         "equipment": "cable",
