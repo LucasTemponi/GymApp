@@ -18,6 +18,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     gap: 1,
+    alignItems: 'center',
   },
   tinyLogo: {
     width: 50,

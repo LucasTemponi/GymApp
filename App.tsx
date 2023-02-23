@@ -4,21 +4,30 @@
  *
  * @format
  */
-import React from 'react';
-
-import {Provider as PaperProvider, Text, TextInput} from 'react-native-paper';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
+import {Provider as PaperProvider} from 'react-native-paper';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+// import {NavigationContainer} from '@react-navigation/native';
 import {Home} from './src/views/Home/Home';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {BackView} from './src/views/Back/BackView';
+import {ScreensStackList} from './src/types';
+import {ExerciceDetails} from './src/views/ExerciceDetails/ExercicesDetails';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<ScreensStackList>();
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <PaperProvider>
-        <Home />
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Back" component={BackView} />
+            <Stack.Screen name="Exercise Details" component={ExerciceDetails} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </PaperProvider>
     </SafeAreaProvider>
   );
