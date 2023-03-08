@@ -5,10 +5,12 @@ import {Text, TextInput} from 'react-native-paper';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {Button} from 'react-native-paper';
+import notifee from '@notifee/react-native';
 
 import {styles} from './styles';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Exercice, ScreensStackList} from '../../types';
+import useNotification from '../../contexts/NotificationWrapper/useNotification/useNotification';
 
 const instance = axios.create({
   baseURL: 'https://exercisedb.p.rapidapi.com/exercises',
@@ -29,6 +31,52 @@ export const Home = ({navigation}: Props) => {
     setQuery(text);
   };
 
+  async function onDisplayNotification(timer: number) {
+    // Request permissions (required for iOS)
+    await notifee.requestPermission();
+
+    // Create a channel (required for Android)
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+
+    // Display a notification
+    try {
+      await notifee.displayNotification({
+        id: 'workout',
+        title: 'Notification Title',
+        body: 'Main body content of the notification',
+        android: {
+          ongoing: true,
+          channelId,
+          timestamp: Date.now() + timer,
+          showChronometer: true,
+          chronometerDirection: 'down',
+          actions: [
+            {
+              title: 'Snooze',
+              icon: 'https://my-cdn.com/icons/snooze.png',
+              pressAction: {
+                id: 'snooze',
+              },
+              input: true,
+            },
+          ],
+          // smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+          // // pressAction is needed if you want the notification to open the app when pressed
+          // pressAction: {
+          //   id: 'default',
+          // },
+        },
+      });
+    } catch {
+      console.log('erro');
+    }
+  }
+
+  const {titulo} = useNotification();
+
   useEffect(() => {
     instance
       .get('')
@@ -38,6 +86,9 @@ export const Home = ({navigation}: Props) => {
 
   return (
     <View style={styles.container}>
+      <Button mode="contained" onPress={() => onDisplayNotification}>
+        {titulo}
+      </Button>
       <TextInput
         style={styles.searchBox}
         label="Busca"
