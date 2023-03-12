@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: '#fff',
     gap: 1,
-    alignItems: 'center',
+    width: '100%',
   },
   imageContainer: {
     flex: 0.3,
@@ -17,5 +17,9 @@ export const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+  },
+  tinyLogo: {
+    width: 50,
+    height: 50,
   },
 });

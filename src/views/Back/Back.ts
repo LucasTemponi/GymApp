@@ -1,4 +1,4 @@
-import {Exercice} from '../../types';
+import {Exercise} from '../../types/types';
 
 export const exercices = [
   {
@@ -1422,4 +1422,4 @@ export const exercices = [
     name: 'wide grip rear pull-up',
     target: 'lats',
   },
-] satisfies Exercice[];
+] satisfies Exercise[];
