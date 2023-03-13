@@ -9,7 +9,7 @@ import {Button} from 'react-native-paper';
 import {styles} from './styles';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Exercise, ScreensStackList} from '../../types/types';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const instance = axios.create({
   baseURL: 'https://exercisedb.p.rapidapi.com/exercises',
@@ -24,9 +24,9 @@ type Props = NativeStackScreenProps<ScreensStackList, 'Home'>;
 
 export const Home = ({route, navigation}: Props) => {
   const [exercices, setExercices] = useState<Exercise[]>();
-  // const [workouts, setWorkouts] = useState<readonly string[]>([]);
+  const [workouts, setWorkouts] = useState<readonly string[]>([]);
   const [query, setQuery] = useState('');
-  const {state} = route.params;
+  const {state, routineId} = route.params;
 
   const handleSearch = (text: string) => {
     setQuery(text);
@@ -39,11 +39,11 @@ export const Home = ({route, navigation}: Props) => {
       } else if (state === 'addingToRoutine') {
         navigation.navigate('Add to routine', {
           exercise,
-          routineId: new Date().getTime(),
+          routineId: routineId || new Date().getSeconds(),
         });
       }
     },
-    [state, navigation],
+    [state, navigation, routineId],
   );
 
   useEffect(() => {
@@ -51,9 +51,9 @@ export const Home = ({route, navigation}: Props) => {
       .get('')
       .then(result => setExercices(result.data))
       .catch(error => console.log(error));
-    // AsyncStorage.getAllKeys().then(result => {
-    //   setWorkouts(result);
-    // });
+    AsyncStorage.getAllKeys().then(result => {
+      setWorkouts(result);
+    });
   }, []);
 
   return (
@@ -90,9 +90,12 @@ export const Home = ({route, navigation}: Props) => {
             routineId: new Date().getSeconds(),
           })
         }>
-        Teste
+        New workout
       </Button>
-      {/* {workouts.map(workout => {
+      <Button mode="elevated" onPress={() => AsyncStorage.clear()}>
+        Clear storage
+      </Button>
+      {workouts.map(workout => {
         return (
           <Button
             mode="elevated"
@@ -105,7 +108,7 @@ export const Home = ({route, navigation}: Props) => {
             {workout}
           </Button>
         );
-      })} */}
+      })}
     </View>
   );
 };

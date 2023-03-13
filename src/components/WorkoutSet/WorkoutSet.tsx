@@ -2,6 +2,7 @@ import React from 'react';
 import {Text} from 'react-native-paper';
 import {View, Image} from 'react-native';
 import {WorkoutExerciseType} from '../../types/types';
+import {styles} from './styles';
 
 type Props = {
   workoutExercise: WorkoutExerciseType;
@@ -9,7 +10,7 @@ type Props = {
 
 export const WorktouSet = ({workoutExercise}: Props) => {
   return (
-    <View>
+    <View style={styles.container}>
       <Image
         source={{
           uri: workoutExercise.exercise.gifUrl,
@@ -22,7 +23,7 @@ export const WorktouSet = ({workoutExercise}: Props) => {
         </Text>
       </View>
       <View>
-        <Text>Sets</Text>
+        <Text>{workoutExercise.sets?.map(set => set.reps)}</Text>
       </View>
     </View>
   );

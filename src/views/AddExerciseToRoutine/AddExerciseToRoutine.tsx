@@ -7,6 +7,7 @@ import {
   ExerciseSet,
   ScreensStackList,
   WorkoutExerciseType,
+  WorkoutRoutine,
 } from '../../types/types';
 import {styles} from './styles';
 
@@ -37,16 +38,25 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
       sets: sets,
     };
     try {
+      const data = await AsyncStorage.getItem(routineId.toString());
+      const routine: WorkoutRoutine = data && JSON.parse(data);
+
+      const newRoutineData: WorkoutRoutine = {
+        ...routine,
+        exercises: routine?.exercises
+          ? [...routine?.exercises, newExercise]
+          : [newExercise],
+      };
       await AsyncStorage.mergeItem(
         routineId.toString(),
-        JSON.stringify({exercises: newExercise}),
+        JSON.stringify(newRoutineData),
       );
       navigation.navigate('Workout routine', {routineId: routineId});
     } catch (e) {
       console.log(e);
     }
   }
-
+  console.log(routineId);
   console.log(sets);
   // useEffect(() => {
   //     if (exercise) {
@@ -61,7 +71,7 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
       <Image style={styles.imageContainer} source={{uri: exercise?.gifUrl}} />
 
       {sets.map((set, index) => (
-        <View style={styles.setContainer}>
+        <View key={index} style={styles.setContainer}>
           <Text>Reps:</Text>
           <TextInput
             onChangeText={text => handleSetChange(index, 'reps', Number(text))}
@@ -69,9 +79,19 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
             keyboardType="numeric"
           />
           <Text>Load:</Text>
-          <TextInput style={styles.input} keyboardType="numeric" />
+          <TextInput
+            onChangeText={text => handleSetChange(index, 'load', Number(text))}
+            style={styles.input}
+            keyboardType="numeric"
+          />
           <Text>Interval:</Text>
-          <TextInput style={styles.input} keyboardType="numeric" />
+          <TextInput
+            onChangeText={text =>
+              handleSetChange(index, 'restTime', Number(text))
+            }
+            style={styles.input}
+            keyboardType="numeric"
+          />
         </View>
       ))}
       <IconButton onPress={handleAddSet} icon={'plus'} />

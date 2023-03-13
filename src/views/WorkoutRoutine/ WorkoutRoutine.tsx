@@ -21,26 +21,35 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
   }, [routine, navigation]);
 
   const handleAdd = () => {
-    navigation.navigate('Home', {state: 'addingToRoutine', routineId});
+    navigation.navigate('Home', {
+      state: 'addingToRoutine',
+      routineId: routineId,
+    });
   };
 
+  console.log(routineId);
   useEffect(() => {
     async function getRoutineFromStorage() {
       const data = await AsyncStorage.getItem(routineId.toString());
-      console.log(data);
+
       if (data) {
         setRoutineState(JSON.parse(data));
       }
     }
+
     getRoutineFromStorage();
   }, [routineId]);
 
   console.log(routineState);
   return (
     <View style={styles.container}>
-      {routineState?.exercises?.map(exercise => (
-        <WorkoutExercise workoutExercise={exercise} />
-      ))}
+      {routineState?.exercises &&
+        routineState?.exercises?.map((exercise, index) => (
+          <WorkoutExercise
+            key={exercise.exercise.name + index}
+            workoutExercise={exercise}
+          />
+        ))}
       <FAB icon="plus" style={styles.fab} onPress={handleAdd} />
     </View>
   );

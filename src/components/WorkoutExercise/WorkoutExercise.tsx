@@ -17,14 +17,16 @@ export const WorkoutExercise = ({workoutExercise}: Props) => {
           uri: workoutExercise.exercise.gifUrl,
         }}
       />
-      <View>
+      <View style={styles.infoContainer}>
         <Text>
           {workoutExercise.exercise.name.charAt(0).toUpperCase() +
             workoutExercise.exercise.name.slice(1)}
         </Text>
       </View>
-      <View>
-        <Text>Sets</Text>
+      <View style={{display: 'flex', flexDirection: 'row', gap: 1}}>
+        <Text style={{marginHorizontal: 1}}>
+          {workoutExercise.sets?.map(set => set.reps)}
+        </Text>
       </View>
     </View>
   );

@@ -5,26 +5,26 @@ export const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     backgroundColor: '#fff',
-    gap: 1,
-    width: '100%',
     flexDirection: 'row',
+    gap: 1,
   },
   imageContainer: {
-    flex: 0.3,
+    height: 400,
     aspectRatio: 1,
   },
-  infoContainer: {
-    flex: 1,
-    flexDirection: 'column',
+  setContainer: {
+    height: 100,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  input: {
+    marginHorizontal: 1,
   },
   fab: {
     position: 'absolute',
     margin: 16,
     right: 0,
     bottom: 0,
-  },
-  tinyLogo: {
-    width: 50,
-    height: 50,
   },
 });
