@@ -20,7 +20,7 @@ export type ScreensStackList = {
   Back: undefined;
   'Exercise Details': {exercise: Exercise};
   'Workout routine': {routine?: WorkoutRoutine; routineId: number};
-  'Add to routine': {exercise: Exercise; routineId: number};
+  'Add to routine': {exercise: WorkoutExerciseType; routineId: number};
 };
 
 export type WorkoutExerciseType = {

@@ -38,7 +38,7 @@ export const Home = ({route, navigation}: Props) => {
         navigation.navigate('Exercise Details', {exercise});
       } else if (state === 'addingToRoutine') {
         navigation.navigate('Add to routine', {
-          exercise,
+          workoutExercise: {exercise},
           routineId: routineId || new Date().getSeconds(),
         });
       }
@@ -52,6 +52,7 @@ export const Home = ({route, navigation}: Props) => {
       .then(result => setExercices(result.data))
       .catch(error => console.log(error));
     AsyncStorage.getAllKeys().then(result => {
+      console.log(result);
       setWorkouts(result);
     });
   }, []);
@@ -95,9 +96,10 @@ export const Home = ({route, navigation}: Props) => {
       <Button mode="elevated" onPress={() => AsyncStorage.clear()}>
         Clear storage
       </Button>
-      {workouts.map(workout => {
+      {workouts.map((workout, index) => {
         return (
           <Button
+            key={index}
             mode="elevated"
             onPress={() =>
               navigation.navigate('Workout routine', {

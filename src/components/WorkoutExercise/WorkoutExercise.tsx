@@ -12,7 +12,7 @@ export const WorkoutExercise = ({workoutExercise}: Props) => {
   return (
     <View style={styles.container}>
       <Image
-        style={styles.tinyLogo}
+        style={styles.imageContainer}
         source={{
           uri: workoutExercise.exercise.gifUrl,
         }}
@@ -22,11 +22,11 @@ export const WorkoutExercise = ({workoutExercise}: Props) => {
           {workoutExercise.exercise.name.charAt(0).toUpperCase() +
             workoutExercise.exercise.name.slice(1)}
         </Text>
-      </View>
-      <View style={{display: 'flex', flexDirection: 'row', gap: 1}}>
-        <Text style={{marginHorizontal: 1}}>
-          {workoutExercise.sets?.map(set => set.reps)}
-        </Text>
+        <View style={{display: 'flex', flexDirection: 'row', gap: 1}}>
+          <Text style={{marginHorizontal: 10}}>
+            {workoutExercise.sets?.map(set => set.reps)}
+          </Text>
+        </View>
       </View>
     </View>
   );

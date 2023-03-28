@@ -2,15 +2,15 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 5,
+    height: 75,
+    margin: 5,
     backgroundColor: '#fff',
     gap: 1,
     width: '100%',
     flexDirection: 'row',
   },
   imageContainer: {
-    flex: 0.3,
+    width: 75,
     aspectRatio: 1,
   },
   infoContainer: {
