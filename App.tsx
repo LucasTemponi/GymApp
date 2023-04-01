@@ -9,15 +9,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 // import {NavigationContainer} from '@react-navigation/native';
-import {Home} from './src/views/Home/Home';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {BackView} from './src/views/Back/BackView';
-import {ScreensStackList} from './src/types/types';
-import {ExerciceDetails} from './src/views/ExerciceDetails/ExercicesDetails';
-import {WorkoutRoutine} from './src/views/WorkoutRoutine/ WorkoutRoutine';
-import {AddExerciseToRoutine} from './src/views/AddExerciseToRoutine/AddExerciseToRoutine';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {BottomStackList} from './src/types/types';
+import HomeStack from './src/navigation/HomeStack';
+import WorkoutStack from './src/navigation/WorkoutStack';
 
-const Stack = createNativeStackNavigator<ScreensStackList>();
+const Stack = createMaterialBottomTabNavigator<BottomStackList>();
 
 export default function App() {
   return (
@@ -26,16 +23,14 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
-              name="Home"
-              component={Home}
-              initialParams={{state: 'viewing'}}
+              name="Exercises"
+              component={HomeStack}
+              options={{tabBarIcon: 'kettlebell'}}
             />
-            <Stack.Screen name="Back" component={BackView} />
-            <Stack.Screen name="Exercise Details" component={ExerciceDetails} />
-            <Stack.Screen name="Workout routine" component={WorkoutRoutine} />
             <Stack.Screen
-              name="Add to routine"
-              component={AddExerciseToRoutine}
+              name="Workouts"
+              component={WorkoutStack}
+              options={{tabBarIcon: 'clipboard-list-outline'}}
             />
           </Stack.Navigator>
         </NavigationContainer>
@@ -43,6 +38,21 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+// {/* <Stack.Navigator>
+// <Stack.Screen
+//   name="Home"
+//   component={Home}
+//   initialParams={{state: 'viewing'}}
+// />
+// {/* <Stack.Screen name="Back" component={BackView} /> */}
+// {/* <Stack.Screen name="Exercise Details" component={ExerciceDetails} /> */}
+// {/* <Stack.Screen name="Workout routine" component={WorkoutRoutine} />
+// <Stack.Screen
+//   name="Add to routine"
+//   component={AddExerciseToRoutine}
+// /> */}
+// </Stack.Navigator> */}
 
 // import type {PropsWithChildren} from 'react';
 // import {

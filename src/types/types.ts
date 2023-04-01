@@ -13,14 +13,22 @@ export type ExerciseSet = {
 };
 
 export type ScreensStackList = {
-  Home: {
+  Routines: undefined;
+  Exercises: {
     state: 'viewing' | 'addingToRoutine';
     routineId?: number;
   };
-  Back: undefined;
   'Exercise Details': {exercise: Exercise};
   'Workout routine': {routine?: WorkoutRoutine; routineId: number};
-  'Add to routine': {exercise: WorkoutExerciseType; routineId: number};
+  'Add to routine': {workoutExercise: WorkoutExerciseType; routineId: number};
+};
+
+export type BottomStackList = {
+  Exercises: {
+    state: 'viewing' | 'addingToRoutine';
+    routineId?: number;
+  };
+  Workouts: undefined;
 };
 
 export type WorkoutExerciseType = {
@@ -29,6 +37,7 @@ export type WorkoutExerciseType = {
 };
 
 export type WorkoutRoutine = {
+  id: number;
   name: string;
   exercises?: WorkoutExerciseType[];
 };

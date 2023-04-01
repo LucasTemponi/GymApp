@@ -20,7 +20,7 @@ const instance = axios.create({
   },
 });
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Home'>;
+type Props = NativeStackScreenProps<ScreensStackList, 'Exercises'>;
 
 export const Home = ({route, navigation}: Props) => {
   const [exercices, setExercices] = useState<Exercise[]>();
