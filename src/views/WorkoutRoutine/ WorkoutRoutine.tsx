@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
 import {FAB, TextInput} from 'react-native-paper';
 import {WorkoutExercise} from '../../components/WorkoutExercise/WorkoutExercise';
 import {ScreensStackList} from '../../types/types';
@@ -37,7 +38,6 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
       console.log(e);
     }
   }
-
   useEffect(() => {
     async function getRoutineFromStorage() {
       const data = await AsyncStorage.getItem(routineId.toString());
@@ -64,21 +64,24 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
         }
         onBlur={handleSaveNewName}
       />
-      {routineState?.exercises &&
-        routineState?.exercises?.map((exercise, index) => (
+      <FlatList
+        style={{height: '100%', width: '100%'}}
+        data={routineState?.exercises}
+        renderItem={({item, index}) => (
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('Add to routine', {
-                workoutExercise: exercise,
+                workoutExercise: item,
                 routineId,
               })
             }>
             <WorkoutExercise
-              key={exercise.exercise.name + index}
-              workoutExercise={exercise}
+              key={item.exercise.name + index}
+              workoutExercise={item}
             />
           </TouchableOpacity>
-        ))}
+        )}
+      />
       <FAB icon="plus" style={styles.fab} onPress={handleAdd} />
     </View>
   );
