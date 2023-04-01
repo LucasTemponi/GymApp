@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FlatList, Image, View} from 'react-native';
 
 import {Text, TextInput} from 'react-native-paper';
@@ -8,7 +8,8 @@ import {Button} from 'react-native-paper';
 
 import {styles} from './styles';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Exercice, ScreensStackList} from '../../types';
+import {Exercise, ScreensStackList} from '../../types/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const instance = axios.create({
   baseURL: 'https://exercisedb.p.rapidapi.com/exercises',
@@ -21,19 +22,39 @@ const instance = axios.create({
 
 type Props = NativeStackScreenProps<ScreensStackList, 'Home'>;
 
-export const Home = ({navigation}: Props) => {
-  const [exercices, setExercices] = useState<Exercice[]>();
+export const Home = ({route, navigation}: Props) => {
+  const [exercices, setExercices] = useState<Exercise[]>();
+  const [workouts, setWorkouts] = useState<readonly string[]>([]);
   const [query, setQuery] = useState('');
+  const {state, routineId} = route.params;
 
   const handleSearch = (text: string) => {
     setQuery(text);
   };
+
+  const handleExercisePress = useCallback(
+    (exercise: Exercise) => {
+      if (state === 'viewing') {
+        navigation.navigate('Exercise Details', {exercise});
+      } else if (state === 'addingToRoutine') {
+        navigation.navigate('Add to routine', {
+          workoutExercise: {exercise},
+          routineId: routineId || new Date().getSeconds(),
+        });
+      }
+    },
+    [state, navigation, routineId],
+  );
 
   useEffect(() => {
     instance
       .get('')
       .then(result => setExercices(result.data))
       .catch(error => console.log(error));
+    AsyncStorage.getAllKeys().then(result => {
+      console.log(result);
+      setWorkouts(result);
+    });
   }, []);
 
   return (
@@ -56,16 +77,40 @@ export const Home = ({navigation}: Props) => {
                 uri: item.gifUrl,
               }}
             />
-            <Text
-              onPress={() =>
-                navigation.navigate('Exercise Details', {exercise: item})
-              }>
+            <Text onPress={() => handleExercisePress(item)}>
               {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
             </Text>
           </View>
         )}
       />
-      <Button mode="elevated">Teste</Button>
+      <Button
+        mode="elevated"
+        onPress={() =>
+          navigation.navigate('Workout routine', {
+            routine: undefined,
+            routineId: new Date().getSeconds(),
+          })
+        }>
+        New workout
+      </Button>
+      <Button mode="elevated" onPress={() => AsyncStorage.clear()}>
+        Clear storage
+      </Button>
+      {workouts.map((workout, index) => {
+        return (
+          <Button
+            key={index}
+            mode="elevated"
+            onPress={() =>
+              navigation.navigate('Workout routine', {
+                routine: undefined,
+                routineId: Number(workout),
+              })
+            }>
+            {workout}
+          </Button>
+        );
+      })}
     </View>
   );
 };
