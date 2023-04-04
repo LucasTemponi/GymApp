@@ -12,8 +12,7 @@ type Props = NativeStackScreenProps<ScreensStackList, 'Workout routine'>;
 
 export const WorkoutRoutine = ({navigation, route}: Props) => {
   const {routine, routineId} = route.params;
-
-  const [routineState, setRoutineState] = useState(routine);
+  const [routineState, setRoutineState] = useState({id: routineId, ...routine});
 
   useEffect(() => {
     navigation.setOptions({
@@ -22,7 +21,7 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
   }, [routine, navigation]);
 
   const handleAdd = () => {
-    navigation.navigate('Home', {
+    navigation.navigate('Exercises', {
       state: 'addingToRoutine',
       routineId: routineId,
     });
@@ -38,6 +37,13 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
       console.log(e);
     }
   }
+
+  useEffect(() => {
+    if (routine) {
+      setRoutineState(oldState => ({...oldState, ...routine}));
+    }
+  }, [routine]);
+
   useEffect(() => {
     async function getRoutineFromStorage() {
       const data = await AsyncStorage.getItem(routineId.toString());
