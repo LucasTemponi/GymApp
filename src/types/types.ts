@@ -24,7 +24,7 @@ export type ScreensStackList = {
 };
 
 export type BottomStackList = {
-  Exercises: {
+  Home: {
     state: 'viewing' | 'addingToRoutine';
     routineId?: number;
   };

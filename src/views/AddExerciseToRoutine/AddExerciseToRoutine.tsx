@@ -56,7 +56,11 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
       }
 
       await AsyncStorage.setItem(routineId.toString(), JSON.stringify(routine));
-      navigation.navigate('Workout routine', {routineId: routineId});
+      console.log(routine.exercises);
+      navigation.navigate('Workout routine', {
+        routineId: routineId,
+        routine: routine,
+      });
     } catch (e) {
       console.log(e);
     }

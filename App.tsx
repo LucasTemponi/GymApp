@@ -21,9 +21,9 @@ export default function App() {
     <SafeAreaProvider>
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator labeled={false}>
             <Stack.Screen
-              name="Exercises"
+              name="Home"
               component={HomeStack}
               options={{tabBarIcon: 'kettlebell'}}
             />

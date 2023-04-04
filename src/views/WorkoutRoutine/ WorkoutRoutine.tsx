@@ -12,7 +12,6 @@ type Props = NativeStackScreenProps<ScreensStackList, 'Workout routine'>;
 
 export const WorkoutRoutine = ({navigation, route}: Props) => {
   const {routine, routineId} = route.params;
-
   const [routineState, setRoutineState] = useState({id: routineId, ...routine});
 
   useEffect(() => {
@@ -38,6 +37,13 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
       console.log(e);
     }
   }
+
+  useEffect(() => {
+    if (routine) {
+      setRoutineState(oldState => ({...oldState, ...routine}));
+    }
+  }, [routine]);
+
   useEffect(() => {
     async function getRoutineFromStorage() {
       const data = await AsyncStorage.getItem(routineId.toString());
