@@ -5,12 +5,21 @@ export const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     backgroundColor: '#fff',
+    flexDirection: 'row',
     gap: 1,
-    alignItems: 'center',
   },
   imageContainer: {
-    flex: 0.3,
+    height: 400,
     aspectRatio: 1,
+  },
+  setContainer: {
+    height: 100,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  input: {
+    marginHorizontal: 1,
   },
   fab: {
     position: 'absolute',
