@@ -7,7 +7,7 @@ import {
   ExerciseSet,
   ScreensStackList,
   WorkoutExerciseType,
-  WorkoutRoutine,
+  WorkoutRoutineType,
 } from '../../types/types';
 import {styles} from './styles';
 
@@ -43,11 +43,13 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
     };
     try {
       const data = await AsyncStorage.getItem(routineId.toString());
-      const routine: WorkoutRoutine = data ? JSON.parse(data) : {exercises: []};
+      const routine: WorkoutRoutineType = data
+        ? JSON.parse(data)
+        : {exercises: []};
       const exerciseIndex = routine.exercises?.findIndex(
         item => item.exercise.id === newExercise.exercise.id,
       );
-      if (exerciseIndex && exerciseIndex > 0 && !!routine?.exercises) {
+      if (exerciseIndex && exerciseIndex >= 0 && !!routine?.exercises) {
         routine.exercises[exerciseIndex] = newExercise;
       } else if (routine.exercises && routine.exercises.length > 0) {
         routine.exercises.push(newExercise);
@@ -60,6 +62,7 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
       navigation.navigate('Workout routine', {
         routineId: routineId,
         routine: routine,
+        edit: true,
       });
     } catch (e) {
       console.log(e);

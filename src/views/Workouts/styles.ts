@@ -12,6 +12,12 @@ export const styles = StyleSheet.create({
     flex: 0.3,
     aspectRatio: 1,
   },
+  text: {
+    margin: 10,
+    padding: 10,
+    fontSize: 20,
+  },
+
   fab: {
     position: 'absolute',
     margin: 16,
