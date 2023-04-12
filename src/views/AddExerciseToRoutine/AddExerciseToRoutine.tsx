@@ -10,6 +10,7 @@ import {
   WorkoutRoutineType,
 } from '../../types/types';
 import {styles} from './styles';
+import {FlatList} from 'react-native-gesture-handler';
 
 type Props = NativeStackScreenProps<ScreensStackList, 'Add to routine'>;
 
@@ -46,10 +47,16 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
       const routine: WorkoutRoutineType = data
         ? JSON.parse(data)
         : {exercises: []};
-      const exerciseIndex = routine.exercises?.findIndex(
-        item => item.exercise.id === newExercise.exercise.id,
-      );
-      if (exerciseIndex && exerciseIndex >= 0 && !!routine?.exercises) {
+
+      const exerciseIndex = routine.exercises?.findIndex(item => {
+        return item.exercise.id === newExercise.exercise.id;
+      });
+
+      if (
+        typeof exerciseIndex !== 'undefined' &&
+        exerciseIndex >= 0 &&
+        !!routine?.exercises
+      ) {
         routine.exercises[exerciseIndex] = newExercise;
       } else if (routine.exercises && routine.exercises.length > 0) {
         routine.exercises.push(newExercise);
@@ -58,7 +65,6 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
       }
 
       await AsyncStorage.setItem(routineId.toString(), JSON.stringify(routine));
-      console.log(routine.exercises);
       navigation.navigate('Workout routine', {
         routineId: routineId,
         routine: routine,
@@ -85,7 +91,43 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
         source={{uri: workoutExercise?.exercise?.gifUrl}}
       />
 
-      {sets.map((set, index) => (
+      <FlatList
+        data={sets}
+        renderItem={({item, index}) => {
+          return (
+            <View style={styles.setContainer}>
+              <Text>Reps:</Text>
+              <TextInput
+                onChangeText={text =>
+                  handleSetChange(index, 'reps', Number(text))
+                }
+                style={styles.input}
+                keyboardType="numeric"
+                value={item.reps.toString()}
+              />
+              <Text>Load:</Text>
+              <TextInput
+                onChangeText={text =>
+                  handleSetChange(index, 'load', Number(text))
+                }
+                style={styles.input}
+                keyboardType="numeric"
+                value={item.load.toString()}
+              />
+              <Text>Interval:</Text>
+              <TextInput
+                onChangeText={text =>
+                  handleSetChange(index, 'restTime', Number(text))
+                }
+                style={styles.input}
+                keyboardType="numeric"
+                value={item.restTime.toString()}
+              />
+            </View>
+          );
+        }}
+      />
+      {/* {sets.map((set, index) => (
         <View key={index} style={styles.setContainer}>
           <Text>Reps:</Text>
           <TextInput
@@ -111,9 +153,12 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
             value={set.restTime.toString()}
           />
         </View>
-      ))}
-      <IconButton onPress={handleAddSet} icon={'plus'} />
-      <FAB onPress={handleSaveExerciseToRoutine} label="Save" />
+      ))} */}
+      <View
+        style={{width: '100%', gap: 2, display: 'flex', flexDirection: 'row'}}>
+        <IconButton onPress={handleAddSet} icon={'plus'} />
+        <FAB onPress={handleSaveExerciseToRoutine} label="Save" />
+      </View>
     </View>
   );
 };

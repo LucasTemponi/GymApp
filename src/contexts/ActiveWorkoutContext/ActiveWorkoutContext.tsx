@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import {WorkoutRoutineType} from '../../types/types';
 import notifee, {EventType} from '@notifee/react-native';
+import {Vibration} from 'react-native';
 
 type ActiveWorkoutProps = {
   activeWorkout: WorkoutRoutineType | null;
@@ -56,8 +57,15 @@ const ActiveWorkoutContext = ({children}: Props) => {
     return -1;
   }, [activeWorkout]);
 
+  const exerciseName = useMemo(() => {
+    if (activeWorkout?.exercises) {
+      const baseName = activeWorkout?.exercises[currentExercise]?.exercise.name;
+      return baseName.charAt(0).toUpperCase() + baseName.slice(1);
+    }
+    return '';
+  }, [currentExercise, activeWorkout]);
+
   const lastSet = useMemo(() => {
-    console.log('lastSet', activeWorkout, currentExercise, lastExercise);
     if (
       activeWorkout?.exercises &&
       currentExercise >= 0 &&
@@ -82,40 +90,10 @@ const ActiveWorkoutContext = ({children}: Props) => {
     return 0;
   }, [currentSet, currentExercise, activeWorkout, lastSet]);
 
-  //   useEffect(() => {
-  //     if (timer > 0) {
-  //       setTimeout(() => setTimer(timer - 1), 1000);
-  //     } else {
-  //       setCurrentExercise(currentExercise + 1);
-  //     }
-  //   }, [timer, currentExercise]);
-
-  // console.log(
-  //   `${Math.floor(elapsedTime / 1000)} seconds ${
-  //     elapsedTime % 1000
-  //   } milliseconds`,
-  // );
-
-  //   const startTime = useMemo(() => {
-  //     if (isTimerRunning) {
-  //       return Date.now() - elapsedTime;
-  //     }
-  //     return 0;
-  //   }, []);
-
   notifee.registerForegroundService(() => {
     return new Promise(() => {
       // Long running task...
     });
-  });
-  notifee.onForegroundEvent(({type, detail}) => {
-    if (
-      type === EventType.ACTION_PRESS &&
-      detail.pressAction &&
-      detail.pressAction.id === 'start'
-    ) {
-      setIsTimerRunning(true);
-    }
   });
 
   notifee.onBackgroundEvent(async ({type, detail}) => {
@@ -132,9 +110,7 @@ const ActiveWorkoutContext = ({children}: Props) => {
     if (isTimerRunning) {
       countRef.current = setTimeout(() => {
         if (elapsedTime < setRestTime) {
-          console.log('aqui?');
           setElapsedTime(oldValue => oldValue + 1);
-          console.log('Passou do set?');
         } else {
           handleNextSet();
           clearTimeout(countRef.current);
@@ -152,53 +128,69 @@ const ActiveWorkoutContext = ({children}: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTimerRunning, elapsedTime]);
 
-  useEffect(() => {
-    async function showNotification() {
-      const channelId = await notifee.createChannel({
-        id: 'default',
-        name: 'Default Channel',
-      });
+  async function showNotification() {
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
 
-      notifee.displayNotification({
-        id: 'working-out',
-        title: `<p style="color: #4caf50;"><b>${
-          activeWorkout?.exercises![currentExercise].exercise.name
-        }</b></p>`,
-        subtitle: currentSet.toString(),
-        body: `${elapsedTime} segundos`,
-        android: {
-          channelId,
-          asForegroundService: true,
-          color: '#4caf50',
-          actions: [
-            {
-              title: '<b>Dance</b> &#128111;',
-              pressAction: {id: 'start'},
-            },
-            {
-              title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
-              pressAction: {id: 'cry'},
-            },
-          ],
-        },
+    notifee.displayNotification({
+      id: 'working-out',
+      title: `<p style="color: #4caf50;"><b>${exerciseName}</b></p>`,
+      subtitle: currentSet.toString(),
+      body: `${setRestTime - elapsedTime} segundos`,
+      android: {
+        channelId,
+        lightUpScreen: elapsedTime - setRestTime === 0,
+        asForegroundService: true,
+        vibrationPattern: [100, 200, 300, 400, 500, 400, 300, 200],
+        color: '#4caf50',
+        actions: [
+          {
+            title: '<b>Dance</b> &#128111;',
+            pressAction: {id: 'start'},
+          },
+          {
+            title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
+            pressAction: {id: 'cry'},
+          },
+        ],
+      },
+    });
+  }
+
+  useEffect(() => {
+    if (activeWorkout) {
+      notifee.onForegroundEvent(({type, detail}) => {
+        if (
+          type === EventType.ACTION_PRESS &&
+          detail.pressAction &&
+          detail.pressAction.id === 'start'
+        ) {
+          setIsTimerRunning(true);
+        }
       });
+    } else {
+      notifee.stopForegroundService();
     }
-    showNotification();
+
+    return () => {
+      notifee.stopForegroundService();
+    };
+  }, [activeWorkout]);
+
+  useEffect(() => {
+    if (activeWorkout) {
+      showNotification();
+      if (elapsedTime - setRestTime === 0) {
+        Vibration.vibrate([100, 200, 300, 400, 500, 400, 300, 200]);
+      }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elapsedTime, activeWorkout, currentExercise]);
 
   const handleStartTimer = () => {
-    // countRef.current = setInterval(() => {
-    //   console.log(elapsedTime, setRestTime, elapsedTime < setRestTime);
-    //   if (elapsedTime < setRestTime) {
-    //     console.log('aqui?');
-    //     setElapsedTime(oldValue => oldValue + 1);
-    //     console.log('Passou do set?');
-    //   } else {
-    //     handleNextSet();
-    //     clearTimeout(countRef.current);
-    //   }
-    // }, 1000);
     setIsTimerRunning(true);
   };
 
@@ -207,19 +199,18 @@ const ActiveWorkoutContext = ({children}: Props) => {
     setIsTimerRunning(false);
   };
 
-  // console.log(currentExercise, currentSet);
-
   const handleNextExercise = () => {
     if (currentExercise < lastExercise) {
       setCurrentExercise(currentExercise + 1);
       setCurrentSet(0);
     } else {
-      console.log('Parabens, vc terminou seu treino');
+      notifee.stopForegroundService();
       clearInterval(countRef.current);
       setActiveWorkout(null);
       setCurrentExercise(0);
       setElapsedTime(0);
       setCurrentSet(0);
+      notifee.cancelNotification('working-out');
     }
   };
 
@@ -230,23 +221,6 @@ const ActiveWorkoutContext = ({children}: Props) => {
       handleNextExercise();
     }
   };
-
-  // useEffect(() => {
-  //   console.log('activeWorkout', activeWorkout?.name, lastExercise);
-  //   if (
-  //     lastExercise >= 0 &&
-  //     currentExercise <= lastExercise &&
-  //     activeWorkout?.exercises
-  //   ) {
-  //     setCurrentExercise(lastExercise);
-  //   }
-  // }, [currentExercise, activeWorkout, lastExercise]);
-
-  // useEffect(() => {
-  //   if (currentExercise) {
-  //     setCurrentExercise(lastExercise);
-  //   }
-  // }, [activeWorkout, lastExercise, currentExercise]);
 
   return (
     <ActiveWorkout.Provider

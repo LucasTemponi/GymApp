@@ -5,7 +5,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ScreensStackList} from '../../types/types';
 import {Button, IconButton, Text} from 'react-native-paper';
 import {View} from 'react-native';
-import notifee from '@notifee/react-native';
 
 type Props = NativeStackScreenProps<ScreensStackList, 'Workig out'>;
 
@@ -25,26 +24,6 @@ export const ActiveWorkoutView = ({navigation}: Props) => {
       title: activeWorkout ? activeWorkout.name : 'Workig out',
     });
   }, [navigation, activeWorkout]);
-  notifee.displayNotification({
-    title:
-      '<p style="color: #4caf50;"><b>Styled HTMLTitle</span></p></b></p> &#128576;',
-    subtitle: '&#129395;',
-    body: `${elapsedTime} segundos`,
-    android: {
-      channelId: '123',
-      color: '#4caf50',
-      actions: [
-        {
-          title: '<b>Dance</b> &#128111;',
-          pressAction: {id: 'dance'},
-        },
-        {
-          title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
-          pressAction: {id: 'cry'},
-        },
-      ],
-    },
-  });
 
   return (
     activeWorkout && (
