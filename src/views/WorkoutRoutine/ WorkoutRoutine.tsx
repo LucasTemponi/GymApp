@@ -1,31 +1,56 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {FAB, TextInput} from 'react-native-paper';
+import {FAB, IconButton, TextInput} from 'react-native-paper';
 import {WorkoutExercise} from '../../components/WorkoutExercise/WorkoutExercise';
-import {ScreensStackList} from '../../types/types';
+import {ScreensStackList, WorkoutRoutineType} from '../../types/types';
 import {styles} from './styles';
+import {useActiveWorkout} from '../../contexts/ActiveWorkoutContext/ActiveWorkoutContext';
 
 type Props = NativeStackScreenProps<ScreensStackList, 'Workout routine'>;
 
 export const WorkoutRoutine = ({navigation, route}: Props) => {
-  const {routine, routineId} = route.params;
-  const [routineState, setRoutineState] = useState({id: routineId, ...routine});
-
+  const {routine, routineId, edit} = route.params;
+  const [routineState, setRoutineState] = useState<WorkoutRoutineType>({
+    ...routine,
+    id: routineId,
+    name: routine ? routine?.name : 'New workout',
+  });
   useEffect(() => {
     navigation.setOptions({
-      title: routine ? routine?.name : 'New workout',
+      title: routineState.name,
     });
-  }, [routine, navigation]);
+  }, [routineState, navigation]);
 
-  const handleAdd = () => {
-    navigation.navigate('Exercises', {
-      state: 'addingToRoutine',
-      routineId: routineId,
-    });
-  };
+  const {setActiveWorkout, handlePause} = useActiveWorkout();
+
+  const handleFAB = useCallback(() => {
+    if (edit) {
+      navigation.navigate('Exercises', {
+        state: 'addingToRoutine',
+        routineId: routineId,
+      });
+    } else {
+      setActiveWorkout(routineState);
+      navigation.navigate('Workig out');
+      // if (activeWorkout) {
+      //   handleStartTimer();
+      // }
+      // if (routineState && !activeWorkout) {
+      //   setActiveWorkout(routineState);
+      // }
+    }
+  }, [
+    navigation,
+    routineId,
+    edit,
+    setActiveWorkout,
+    routineState,
+    // activeWorkout,
+    // handleStartTimer,
+  ]);
 
   async function handleSaveNewName() {
     try {
@@ -88,7 +113,13 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
           </TouchableOpacity>
         )}
       />
-      <FAB icon="plus" style={styles.fab} onPress={handleAdd} />
+
+      <FAB
+        icon={edit ? 'plus' : 'play'}
+        style={styles.fab}
+        onPress={handleFAB}
+      />
+      <IconButton onPress={handlePause} icon={'pause'} />
     </View>
   );
 };

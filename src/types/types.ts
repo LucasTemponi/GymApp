@@ -19,8 +19,13 @@ export type ScreensStackList = {
     routineId?: number;
   };
   'Exercise Details': {exercise: Exercise};
-  'Workout routine': {routine?: WorkoutRoutine; routineId: number};
+  'Workout routine': {
+    routine?: WorkoutRoutineType;
+    routineId: number;
+    edit?: boolean;
+  };
   'Add to routine': {workoutExercise: WorkoutExerciseType; routineId: number};
+  'Workig out': undefined;
 };
 
 export type BottomStackList = {
@@ -36,7 +41,7 @@ export type WorkoutExerciseType = {
   sets?: ExerciseSet[];
 };
 
-export type WorkoutRoutine = {
+export type WorkoutRoutineType = {
   id: number;
   name: string;
   exercises?: WorkoutExerciseType[];

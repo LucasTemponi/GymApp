@@ -7,6 +7,7 @@ import {ExerciceDetails} from '../views/ExerciceDetails/ExercicesDetails';
 import {WorkoutRoutine} from '../views/WorkoutRoutine/ WorkoutRoutine';
 import {AddExerciseToRoutine} from '../views/AddExerciseToRoutine/AddExerciseToRoutine';
 import Workouts from '../views/Workouts/Workoust';
+import {ActiveWorkoutView} from '../views/ActiveWorkouView/ActiveWorkoutView';
 
 const Stack = createNativeStackNavigator<ScreensStackList>();
 
@@ -22,6 +23,7 @@ export default function WorkoutStack() {
       <Stack.Screen name="Exercise Details" component={ExerciceDetails} />
       <Stack.Screen name="Workout routine" component={WorkoutRoutine} />
       <Stack.Screen name="Add to routine" component={AddExerciseToRoutine} />
+      <Stack.Screen name="Workig out" component={ActiveWorkoutView} />
     </Stack.Navigator>
   );
 }
