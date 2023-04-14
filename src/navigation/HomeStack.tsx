@@ -19,6 +19,7 @@ export default function HomeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        options={{headerShown: false}}
         name="Exercises"
         component={Home}
         initialParams={{state: 'viewing'}}

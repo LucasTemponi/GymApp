@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {FAB, IconButton, TextInput} from 'react-native-paper';
+import {FAB, TextInput} from 'react-native-paper';
 import {WorkoutExercise} from '../../components/WorkoutExercise/WorkoutExercise';
 import {ScreensStackList, WorkoutRoutineType} from '../../types/types';
 import {styles} from './styles';
@@ -24,7 +24,7 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
     });
   }, [routineState, navigation]);
 
-  const {setActiveWorkout, handlePause} = useActiveWorkout();
+  const {setActiveWorkout} = useActiveWorkout();
 
   const handleFAB = useCallback(() => {
     if (edit) {
@@ -35,28 +35,37 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
     } else {
       setActiveWorkout(routineState);
       navigation.navigate('Workig out');
-      // if (activeWorkout) {
-      //   handleStartTimer();
-      // }
-      // if (routineState && !activeWorkout) {
-      //   setActiveWorkout(routineState);
-      // }
     }
-  }, [
-    navigation,
-    routineId,
-    edit,
-    setActiveWorkout,
-    routineState,
-    // activeWorkout,
-    // handleStartTimer,
-  ]);
+  }, [navigation, routineId, edit, setActiveWorkout, routineState]);
+
+  const handleRemoveExercise = useCallback(
+    async (exerciseId: string) => {
+      const newRoutineExercises = routineState.exercises?.filter(
+        item => item.exercise.id !== exerciseId,
+      );
+      const newRoutine = {
+        ...routineState,
+        exercises: newRoutineExercises,
+      };
+
+      setRoutineState(newRoutine);
+      try {
+        await AsyncStorage.setItem(
+          routineId.toString(),
+          JSON.stringify(newRoutine),
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [routineState, routineId],
+  );
 
   async function handleSaveNewName() {
     try {
       await AsyncStorage.setItem(
         routineId.toString(),
-        JSON.stringify({...routineState}),
+        JSON.stringify(routineState),
       );
     } catch (e) {
       console.log(e);
@@ -99,18 +108,17 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
         style={{height: '100%', width: '100%'}}
         data={routineState?.exercises}
         renderItem={({item, index}) => (
-          <TouchableOpacity
-            onPress={() =>
+          <WorkoutExercise
+            onRemove={() => handleRemoveExercise(item.exercise.id)}
+            onEdit={() =>
               navigation.navigate('Add to routine', {
                 workoutExercise: item,
                 routineId,
               })
-            }>
-            <WorkoutExercise
-              key={item.exercise.name + index}
-              workoutExercise={item}
-            />
-          </TouchableOpacity>
+            }
+            key={item.exercise.name + index}
+            workoutExercise={item}
+          />
         )}
       />
 
@@ -119,7 +127,6 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
         style={styles.fab}
         onPress={handleFAB}
       />
-      <IconButton onPress={handlePause} icon={'pause'} />
     </View>
   );
 };

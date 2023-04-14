@@ -15,7 +15,7 @@ import HomeStack from './src/navigation/HomeStack';
 import WorkoutStack from './src/navigation/WorkoutStack';
 import ActiveWorkoutContext from './src/contexts/ActiveWorkoutContext/ActiveWorkoutContext';
 
-const Stack = createMaterialBottomTabNavigator<BottomStackList>();
+const Tab = createMaterialBottomTabNavigator<BottomStackList>();
 
 export default function App() {
   return (
@@ -23,18 +23,21 @@ export default function App() {
       <PaperProvider>
         <ActiveWorkoutContext>
           <NavigationContainer>
-            <Stack.Navigator labeled={false}>
-              <Stack.Screen
+            <Tab.Navigator
+              barStyle={{height: 75}}
+              activeColor="white"
+              labeled={false}>
+              <Tab.Screen
                 name="Home"
                 component={HomeStack}
                 options={{tabBarIcon: 'kettlebell'}}
               />
-              <Stack.Screen
+              <Tab.Screen
                 name="Workouts"
                 component={WorkoutStack}
                 options={{tabBarIcon: 'clipboard-list-outline'}}
               />
-            </Stack.Navigator>
+            </Tab.Navigator>
           </NavigationContainer>
         </ActiveWorkoutContext>
       </PaperProvider>

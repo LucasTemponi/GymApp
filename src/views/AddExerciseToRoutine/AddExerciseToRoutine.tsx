@@ -127,33 +127,6 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
           );
         }}
       />
-      {/* {sets.map((set, index) => (
-        <View key={index} style={styles.setContainer}>
-          <Text>Reps:</Text>
-          <TextInput
-            onChangeText={text => handleSetChange(index, 'reps', Number(text))}
-            style={styles.input}
-            keyboardType="numeric"
-            value={set.reps.toString()}
-          />
-          <Text>Load:</Text>
-          <TextInput
-            onChangeText={text => handleSetChange(index, 'load', Number(text))}
-            style={styles.input}
-            keyboardType="numeric"
-            value={set.load.toString()}
-          />
-          <Text>Interval:</Text>
-          <TextInput
-            onChangeText={text =>
-              handleSetChange(index, 'restTime', Number(text))
-            }
-            style={styles.input}
-            keyboardType="numeric"
-            value={set.restTime.toString()}
-          />
-        </View>
-      ))} */}
       <View
         style={{width: '100%', gap: 2, display: 'flex', flexDirection: 'row'}}>
         <IconButton onPress={handleAddSet} icon={'plus'} />

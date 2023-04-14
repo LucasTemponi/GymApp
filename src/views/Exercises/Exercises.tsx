@@ -1,13 +1,14 @@
 import React, {useCallback} from 'react';
-import {FlatList, Image, View} from 'react-native';
+import {FlatList, View} from 'react-native';
 
-import {ActivityIndicator, Text, TextInput} from 'react-native-paper';
+import {ActivityIndicator, TextInput} from 'react-native-paper';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 
 import {styles} from './styles';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Exercise, ScreensStackList} from '../../types/types';
+import {ExerciseCard} from '../../components/ExerciseCard/ExerciseCard';
 
 const instance = axios.create({
   baseURL: 'https://exercisedb.p.rapidapi.com/exercises',
@@ -67,21 +68,27 @@ export const Home = ({route, navigation}: Props) => {
             right={<TextInput.Icon icon="magnify" />}
           />
           <FlatList
+            numColumns={2}
+            style={{width: '100%'}}
             data={exercices?.filter(exercice =>
               exercice.name.includes(query.toLowerCase()),
             )}
             renderItem={({item}) => (
-              <View style={styles.exerciceContainer}>
-                <Image
-                  style={styles.tinyLogo}
-                  source={{
-                    uri: item.gifUrl,
-                  }}
-                />
-                <Text onPress={() => handleExercisePress(item)}>
-                  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-                </Text>
-              </View>
+              <ExerciseCard
+                exercise={item}
+                onPress={() => handleExercisePress(item)}
+              />
+              // <View style={styles.exerciceContainer}>
+              //   <Image
+              //     style={styles.tinyLogo}
+              //     source={{
+              //       uri: item.gifUrl,
+              //     }}
+              //   />
+              //   <Text onPress={() => handleExercisePress(item)}>
+              //     {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+              //   </Text>
+              // </View>
             )}
           />
         </>
