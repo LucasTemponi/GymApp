@@ -37,8 +37,8 @@ export const WorkoutExercise = ({workoutExercise, onEdit, onRemove}: Props) => {
             workoutExercise.exercise.name.slice(1)}
         </Text>
         <View style={{display: 'flex', flexDirection: 'row', gap: 1}}>
-          {workoutExercise.sets?.map(set => (
-            <SetInfo set={set} />
+          {workoutExercise.sets?.map((set, index) => (
+            <SetInfo key={workoutExercise.exercise.name + index} set={set} />
           ))}
         </View>
       </View>

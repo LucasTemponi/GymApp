@@ -78,17 +78,6 @@ export const Home = ({route, navigation}: Props) => {
                 exercise={item}
                 onPress={() => handleExercisePress(item)}
               />
-              // <View style={styles.exerciceContainer}>
-              //   <Image
-              //     style={styles.tinyLogo}
-              //     source={{
-              //       uri: item.gifUrl,
-              //     }}
-              //   />
-              //   <Text onPress={() => handleExercisePress(item)}>
-              //     {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-              //   </Text>
-              // </View>
             )}
           />
         </>

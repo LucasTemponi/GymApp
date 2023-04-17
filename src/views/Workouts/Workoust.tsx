@@ -1,10 +1,11 @@
 import React, {useCallback, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScreensStackList, WorkoutRoutineType} from '../../types/types';
-import {ActivityIndicator, Button, FAB, Text} from 'react-native-paper';
+import {ActivityIndicator, FAB, Text} from 'react-native-paper';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {styles} from './styles';
 import {useFocusEffect} from '@react-navigation/native';
+import {FlatList} from 'react-native-gesture-handler';
 
 type Props = NativeStackScreenProps<ScreensStackList, 'Workout routine'>;
 
@@ -44,30 +45,33 @@ export default function Workouts({navigation}: Props) {
     <ActivityIndicator />
   ) : (
     <>
-      {workouts.map((workout, index) => (
-        <Text
-          style={styles.text}
-          key={workout.name + index}
-          onLongPress={() =>
-            navigation.navigate('Workout routine', {
-              routine: workout,
-              routineId: workout.id,
-              edit: true,
-            })
-          }
-          onPress={() =>
-            navigation.navigate('Workout routine', {
-              routine: workout,
-              routineId: workout.id,
-            })
-          }>
-          {workout.name || `Treino ${index + 1}`}
-        </Text>
-      ))}
+      <FlatList
+        data={workouts}
+        renderItem={({item, index}) => (
+          <Text
+            style={styles.text}
+            key={item.name + index}
+            onLongPress={() =>
+              navigation.navigate('Workout routine', {
+                routine: item,
+                routineId: item.id,
+                edit: true,
+              })
+            }
+            onPress={() =>
+              navigation.navigate('Workout routine', {
+                routine: item,
+                routineId: item.id,
+              })
+            }>
+            {item.name || `Treino ${index + 1}`}
+          </Text>
+        )}
+      />
       <FAB icon="plus" style={styles.fab} onPress={handleAdd} />
-      <Button mode="elevated" onPress={() => AsyncStorage.clear()}>
+      {/* <Button mode="elevated" onPress={() => AsyncStorage.clear()}>
         Clear storage
-      </Button>
+      </Button> */}
     </>
   );
 }

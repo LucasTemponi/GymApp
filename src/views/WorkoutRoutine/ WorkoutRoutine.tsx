@@ -109,6 +109,7 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
         data={routineState?.exercises}
         renderItem={({item, index}) => (
           <WorkoutExercise
+            key={item.exercise.name + index}
             onRemove={() => handleRemoveExercise(item.exercise.id)}
             onEdit={() =>
               navigation.navigate('Add to routine', {
@@ -116,7 +117,6 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
                 routineId,
               })
             }
-            key={item.exercise.name + index}
             workoutExercise={item}
           />
         )}

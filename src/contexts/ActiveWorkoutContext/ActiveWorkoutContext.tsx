@@ -136,23 +136,22 @@ const ActiveWorkoutContext = ({children}: Props) => {
 
     notifee.displayNotification({
       id: 'working-out',
-      title: `<p style="color: #4caf50;"><b>${exerciseName}</b></p>`,
-      subtitle: currentSet.toString(),
-      body: `${setRestTime - elapsedTime} segundos`,
+      title: `<p style="color: #4caf50;"><b>${exerciseName}</b> - Set ${
+        currentSet + 1
+      } of ${lastSet + 1} </p>`,
+      // subtitle: currentSet.toString(),
+      body: `${setRestTime - elapsedTime} seconds`,
       android: {
         channelId,
         lightUpScreen: elapsedTime - setRestTime === 0,
         asForegroundService: true,
         vibrationPattern: [100, 200, 300, 400, 500, 400, 300, 200],
         color: '#4caf50',
+        circularLargeIcon: true,
         actions: [
           {
-            title: '<b>Dance</b> &#128111;',
+            title: '<b>Rest</b>',
             pressAction: {id: 'start'},
-          },
-          {
-            title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
-            pressAction: {id: 'cry'},
           },
         ],
       },
