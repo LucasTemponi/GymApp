@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 
 type Props = {
   exercise: Exercise;
-  onPress: () => void;
+  onPress?: () => void;
 };
 export const ExerciseCard = ({exercise, onPress}: Props) => {
   return (

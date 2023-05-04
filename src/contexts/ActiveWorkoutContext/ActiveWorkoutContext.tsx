@@ -20,8 +20,10 @@ type ActiveWorkoutProps = {
   handleNextExercise: () => void;
   handleNextSet: () => void;
   activeSet: number;
+  setRestTime: number;
   activeExercise: number;
   elapsedTime: number;
+  isTimerRunning: boolean;
 };
 
 const ActiveWorkout = createContext<ActiveWorkoutProps>({
@@ -32,8 +34,10 @@ const ActiveWorkout = createContext<ActiveWorkoutProps>({
   handleNextExercise: () => {},
   handleNextSet: () => {},
   activeSet: 0,
+  setRestTime: 0,
   activeExercise: 0,
   elapsedTime: 0,
+  isTimerRunning: false,
 });
 
 type Props = {
@@ -136,7 +140,7 @@ const ActiveWorkoutContext = ({children}: Props) => {
 
     notifee.displayNotification({
       id: 'working-out',
-      title: `<p style="color: #4caf50;"><b>${exerciseName}</b> - Set ${
+      title: `<p style="color: #6750a4;"><b>${exerciseName}</b> - Set ${
         currentSet + 1
       } of ${lastSet + 1} </p>`,
       // subtitle: currentSet.toString(),
@@ -146,8 +150,9 @@ const ActiveWorkoutContext = ({children}: Props) => {
         lightUpScreen: elapsedTime - setRestTime === 0,
         asForegroundService: true,
         vibrationPattern: [100, 200, 300, 400, 500, 400, 300, 200],
-        color: '#4caf50',
-        circularLargeIcon: true,
+        color: '#6750a4',
+        smallIcon: 'ic_launcher',
+        // circularLargeIcon: true,
         actions: [
           {
             title: '<b>Rest</b>',
@@ -194,7 +199,9 @@ const ActiveWorkoutContext = ({children}: Props) => {
   };
 
   const handlePause = () => {
-    if (countRef.current) clearTimeout(countRef.current);
+    if (countRef.current) {
+      clearTimeout(countRef.current);
+    }
     setIsTimerRunning(false);
   };
 
@@ -231,8 +238,10 @@ const ActiveWorkoutContext = ({children}: Props) => {
         handleNextExercise,
         handleNextSet,
         activeSet: currentSet,
+        setRestTime,
         activeExercise: currentExercise,
         elapsedTime,
+        isTimerRunning,
       }}>
       {children}
     </ActiveWorkout.Provider>

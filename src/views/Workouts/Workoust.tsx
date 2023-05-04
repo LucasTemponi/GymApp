@@ -6,12 +6,14 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {styles} from './styles';
 import {useFocusEffect} from '@react-navigation/native';
 import {FlatList} from 'react-native-gesture-handler';
+import {useActiveWorkout} from '../../contexts/ActiveWorkoutContext/ActiveWorkoutContext';
 
 type Props = NativeStackScreenProps<ScreensStackList, 'Workout routine'>;
 
 export default function Workouts({navigation}: Props) {
   const [workouts, setWorkouts] = useState<WorkoutRoutineType[]>([]);
   const [loading, setLoading] = useState(true);
+  const {activeWorkout} = useActiveWorkout();
 
   const handleAdd = () => {
     navigation.navigate('Workout routine', {
@@ -59,10 +61,12 @@ export default function Workouts({navigation}: Props) {
               })
             }
             onPress={() =>
-              navigation.navigate('Workout routine', {
-                routine: item,
-                routineId: item.id,
-              })
+              activeWorkout?.id === item.id
+                ? navigation.navigate('Workig out')
+                : navigation.navigate('Workout routine', {
+                    routine: item,
+                    routineId: item.id,
+                  })
             }>
             {item.name || `Treino ${index + 1}`}
           </Text>

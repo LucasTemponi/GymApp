@@ -7,20 +7,26 @@ import {SetInfo} from '../SetInfo/SetInfo';
 
 type Props = {
   workoutExercise: WorkoutExerciseType;
-  onEdit: () => void;
-  onRemove: () => void;
+  onEdit?: () => void;
+  onRemove?: () => void;
+  showMenu?: boolean;
 };
 
-export const WorkoutExercise = ({workoutExercise, onEdit, onRemove}: Props) => {
+export const WorkoutExercise = ({
+  workoutExercise,
+  onEdit,
+  onRemove,
+  showMenu,
+}: Props) => {
   const [visible, setVisible] = React.useState(false);
 
   const handleEdit = () => {
     setVisible(false);
-    onEdit();
+    !!onEdit && onEdit();
   };
   const handleRemove = () => {
     setVisible(false);
-    onRemove();
+    !!onRemove && onRemove();
   };
 
   return (
@@ -42,19 +48,21 @@ export const WorkoutExercise = ({workoutExercise, onEdit, onRemove}: Props) => {
           ))}
         </View>
       </View>
-      <Menu
-        anchor={
-          <IconButton
-            style={styles.menuButton}
-            icon={'dots-vertical'}
-            onPress={() => setVisible(!visible)}
-          />
-        }
-        visible={visible}
-        onDismiss={() => setVisible(false)}>
-        <Menu.Item onPress={handleEdit} title="Edit" />
-        <Menu.Item onPress={handleRemove} title="Remove" />
-      </Menu>
+      {showMenu && (
+        <Menu
+          anchor={
+            <IconButton
+              style={styles.menuButton}
+              icon={'dots-vertical'}
+              onPress={() => setVisible(!visible)}
+            />
+          }
+          visible={visible}
+          onDismiss={() => setVisible(false)}>
+          <Menu.Item onPress={handleEdit} title="Edit" />
+          <Menu.Item onPress={handleRemove} title="Remove" />
+        </Menu>
+      )}
     </View>
   );
 };

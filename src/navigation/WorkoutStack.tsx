@@ -23,7 +23,11 @@ export default function WorkoutStack() {
       <Stack.Screen name="Exercise Details" component={ExerciceDetails} />
       <Stack.Screen name="Workout routine" component={WorkoutRoutine} />
       <Stack.Screen name="Add to routine" component={AddExerciseToRoutine} />
-      <Stack.Screen name="Workig out" component={ActiveWorkoutView} />
+      <Stack.Screen
+        name="Workig out"
+        options={{headerShown: false}}
+        component={ActiveWorkoutView}
+      />
     </Stack.Navigator>
   );
 }
