@@ -22,6 +22,7 @@ type ActiveWorkoutProps = {
   activeSet: number;
   setRestTime: number;
   activeExercise: number;
+  exerciseName: string;
   elapsedTime: number;
   isTimerRunning: boolean;
 };
@@ -36,6 +37,7 @@ const ActiveWorkout = createContext<ActiveWorkoutProps>({
   activeSet: 0,
   setRestTime: 0,
   activeExercise: 0,
+  exerciseName: '',
   elapsedTime: 0,
   isTimerRunning: false,
 });
@@ -240,6 +242,7 @@ const ActiveWorkoutContext = ({children}: Props) => {
         activeSet: currentSet,
         setRestTime,
         activeExercise: currentExercise,
+        exerciseName,
         elapsedTime,
         isTimerRunning,
       }}>

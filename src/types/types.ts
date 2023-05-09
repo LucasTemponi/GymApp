@@ -25,7 +25,7 @@ export type ScreensStackList = {
     edit?: boolean;
   };
   'Add to routine': {workoutExercise: WorkoutExerciseType; routineId: number};
-  'Workig out': undefined;
+  'Working out': undefined;
 };
 
 export type BottomStackList = {

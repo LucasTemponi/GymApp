@@ -8,13 +8,14 @@ import {Image, View} from 'react-native';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import {styles} from './styles';
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Workig out'>;
+type Props = NativeStackScreenProps<ScreensStackList, 'Working out'>;
 
 export const ActiveWorkoutView = ({navigation}: Props) => {
   const {
     activeWorkout,
     activeSet,
     activeExercise,
+    exerciseName,
     handleStartTimer,
     setRestTime,
     elapsedTime,
@@ -37,9 +38,7 @@ export const ActiveWorkoutView = ({navigation}: Props) => {
           }}
         />
         <View style={styles.timerContainer}>
-          <Text style={styles.exerciseName}>
-            {activeWorkout?.exercises![activeExercise].exercise.name}
-          </Text>
+          <Text style={styles.exerciseName}>{exerciseName}</Text>
           <Text>{activeSet}</Text>
 
           <CountdownCircleTimer

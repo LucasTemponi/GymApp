@@ -34,7 +34,7 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
       });
     } else {
       setActiveWorkout(routineState);
-      navigation.navigate('Workig out');
+      navigation.navigate('Working out');
     }
   }, [navigation, routineId, edit, setActiveWorkout, routineState]);
 

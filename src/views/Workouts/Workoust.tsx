@@ -62,7 +62,7 @@ export default function Workouts({navigation}: Props) {
             }
             onPress={() =>
               activeWorkout?.id === item.id
-                ? navigation.navigate('Workig out')
+                ? navigation.navigate('Working out')
                 : navigation.navigate('Workout routine', {
                     routine: item,
                     routineId: item.id,
