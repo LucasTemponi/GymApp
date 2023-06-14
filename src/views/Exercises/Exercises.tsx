@@ -6,9 +6,11 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 
 import {styles} from './styles';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Exercise, ScreensStackList} from '../../types/types';
+import {Exercise, MainStackList, TabStackList} from '../../types/types';
 import {ExerciseCard} from '../../components/ExerciseCard/ExerciseCard';
+import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
+import {CompositeScreenProps} from '@react-navigation/native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const instance = axios.create({
   baseURL: 'https://exercisedb.p.rapidapi.com/exercises',
@@ -19,9 +21,12 @@ const instance = axios.create({
   },
 });
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Exercises'>;
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<MainStackList, 'Exercises'>,
+  MaterialBottomTabScreenProps<TabStackList, 'Exercices'>
+>;
 
-export const Home = ({route, navigation}: Props) => {
+export const Exercises = ({route, navigation}: Props) => {
   const [exercices, setExercices] = useState<Exercise[]>();
   const [query, setQuery] = useState('');
   const {state, routineId} = route.params;
@@ -86,4 +91,4 @@ export const Home = ({route, navigation}: Props) => {
   );
 };
 
-export default Home;
+export default Exercises;

@@ -2,10 +2,10 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
 import {Image, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {ScreensStackList} from '../../types/types';
+import {MainStackList} from '../../types/types';
 import {styles} from './styles';
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Exercise Details'>;
+type Props = NativeStackScreenProps<MainStackList, 'Exercise Details'>;
 
 export const ExerciceDetails = ({navigation, route}: Props) => {
   const {exercise} = route.params;
@@ -21,7 +21,8 @@ export const ExerciceDetails = ({navigation, route}: Props) => {
   return (
     <View style={styles.container}>
       <Image style={styles.imageContainer} source={{uri: exercise?.gifUrl}} />
-      <Text>{exercise?.target}</Text>
+      <Text>{`Target: ${exercise?.target}`}</Text>
+      <Text>{`Equipment: ${exercise?.equipment}`}</Text>
     </View>
   );
 };

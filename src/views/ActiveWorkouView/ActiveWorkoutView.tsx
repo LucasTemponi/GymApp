@@ -2,13 +2,13 @@ import React from 'react';
 import {useEffect} from 'react';
 import {useActiveWorkout} from '../../contexts/ActiveWorkoutContext/ActiveWorkoutContext';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {ScreensStackList} from '../../types/types';
+import {MainStackList} from '../../types/types';
 import {Button, DefaultTheme, Text} from 'react-native-paper';
 import {Image, View} from 'react-native';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import {styles} from './styles';
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Working out'>;
+type Props = NativeStackScreenProps<MainStackList, 'Working out'>;
 
 export const ActiveWorkoutView = ({navigation}: Props) => {
   const {

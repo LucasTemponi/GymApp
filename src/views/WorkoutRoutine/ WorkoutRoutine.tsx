@@ -5,11 +5,11 @@ import {View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {FAB, TextInput} from 'react-native-paper';
 import {WorkoutExercise} from '../../components/WorkoutExercise/WorkoutExercise';
-import {ScreensStackList, WorkoutRoutineType} from '../../types/types';
+import {MainStackList, WorkoutRoutineType} from '../../types/types';
 import {styles} from './styles';
 import {useActiveWorkout} from '../../contexts/ActiveWorkoutContext/ActiveWorkoutContext';
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Workout routine'>;
+type Props = NativeStackScreenProps<MainStackList, 'Workout routine'>;
 
 export const WorkoutRoutine = ({navigation, route}: Props) => {
   const {routine, routineId, edit} = route.params;
@@ -92,18 +92,20 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={{
-          width: '100%',
-          marginBottom: 5,
-        }}
-        label="Workout name"
-        value={routineState?.name}
-        onChangeText={text =>
-          setRoutineState(oldState => ({...oldState, name: text}))
-        }
-        onBlur={handleSaveNewName}
-      />
+      {edit && (
+        <TextInput
+          style={{
+            width: '100%',
+            marginBottom: 5,
+          }}
+          label="Workout name"
+          value={routineState?.name}
+          onChangeText={text =>
+            setRoutineState(oldState => ({...oldState, name: text}))
+          }
+          onBlur={handleSaveNewName}
+        />
+      )}
       <FlatList
         style={{height: '100%', width: '100%'}}
         data={routineState?.exercises}

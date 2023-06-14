@@ -1,18 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
-import {Image, View, Text} from 'react-native';
+import {Image, View, Text, KeyboardAvoidingView} from 'react-native';
 import {FAB, IconButton, TextInput} from 'react-native-paper';
 import {
   ExerciseSet,
-  ScreensStackList,
+  MainStackList,
   WorkoutExerciseType,
   WorkoutRoutineType,
 } from '../../types/types';
 import {styles} from './styles';
 import {FlatList} from 'react-native-gesture-handler';
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Add to routine'>;
+type Props = NativeStackScreenProps<MainStackList, 'Add to routine'>;
 
 export const AddExerciseToRoutine = ({route, navigation}: Props) => {
   const {workoutExercise, routineId} = route.params;
@@ -84,6 +84,8 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
     }
   }, [workoutExercise, navigation]);
 
+  console.log('estou aqui');
+
   return (
     <View style={styles?.container}>
       <Image
@@ -95,7 +97,7 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
         data={sets}
         renderItem={({item, index}) => {
           return (
-            <View style={styles.setContainer}>
+            <KeyboardAvoidingView style={styles.setContainer}>
               <Text>Reps:</Text>
               <TextInput
                 onChangeText={text =>
@@ -123,12 +125,19 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
                 keyboardType="numeric"
                 value={item.restTime.toString()}
               />
-            </View>
+            </KeyboardAvoidingView>
           );
         }}
       />
+
       <View
-        style={{width: '100%', gap: 2, display: 'flex', flexDirection: 'row'}}>
+        style={{
+          width: '100%',
+          gap: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+        }}>
         <IconButton onPress={handleAddSet} icon={'plus'} />
         <FAB onPress={handleSaveExerciseToRoutine} label="Save" />
       </View>

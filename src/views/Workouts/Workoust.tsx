@@ -1,14 +1,14 @@
 import React, {useCallback, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ScreensStackList, WorkoutRoutineType} from '../../types/types';
+import {MainStackList, WorkoutRoutineType} from '../../types/types';
 import {ActivityIndicator, FAB, Text} from 'react-native-paper';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
 import {styles} from './styles';
 import {useFocusEffect} from '@react-navigation/native';
 import {FlatList} from 'react-native-gesture-handler';
 import {useActiveWorkout} from '../../contexts/ActiveWorkoutContext/ActiveWorkoutContext';
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Workout routine'>;
+type Props = MaterialBottomTabScreenProps<MainStackList, 'Workout routine'>;
 
 export default function Workouts({navigation}: Props) {
   const [workouts, setWorkouts] = useState<WorkoutRoutineType[]>([]);
