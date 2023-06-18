@@ -84,8 +84,6 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
     }
   }, [workoutExercise, navigation]);
 
-  console.log('estou aqui');
-
   return (
     <View style={styles?.container}>
       <Image

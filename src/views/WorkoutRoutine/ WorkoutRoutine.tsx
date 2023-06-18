@@ -111,7 +111,7 @@ export const WorkoutRoutine = ({navigation, route}: Props) => {
         data={routineState?.exercises}
         renderItem={({item, index}) => (
           <WorkoutExercise
-            showMenu
+            showMenu={!!edit}
             key={item.exercise.name + index}
             onRemove={() => handleRemoveExercise(item.exercise.id)}
             onEdit={() =>

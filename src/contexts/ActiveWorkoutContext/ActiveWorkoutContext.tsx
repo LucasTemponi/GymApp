@@ -20,6 +20,7 @@ type ActiveWorkoutProps = {
   handleNextExercise: () => void;
   handleNextSet: () => void;
   activeSet: number;
+  lastSet: number;
   setRestTime: number;
   activeExercise: number;
   exerciseName: string;
@@ -35,6 +36,7 @@ const ActiveWorkout = createContext<ActiveWorkoutProps>({
   handleNextExercise: () => {},
   handleNextSet: () => {},
   activeSet: 0,
+  lastSet: 0,
   setRestTime: 0,
   activeExercise: 0,
   exerciseName: '',
@@ -240,6 +242,7 @@ const ActiveWorkoutContext = ({children}: Props) => {
         handleNextExercise,
         handleNextSet,
         activeSet: currentSet,
+        lastSet,
         setRestTime,
         activeExercise: currentExercise,
         exerciseName,

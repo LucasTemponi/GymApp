@@ -60,7 +60,11 @@ export const WorkoutExercise = ({
           visible={visible}
           onDismiss={() => setVisible(false)}>
           <Menu.Item onPress={handleEdit} title="Edit" />
-          <Menu.Item onPress={handleRemove} title="Remove" />
+          <Menu.Item
+            onPress={handleRemove}
+            titleStyle={{color: 'red'}}
+            title="Remove"
+          />
         </Menu>
       )}
     </View>

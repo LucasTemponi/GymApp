@@ -14,6 +14,7 @@ export const ActiveWorkoutView = ({navigation}: Props) => {
   const {
     activeWorkout,
     activeSet,
+    lastSet,
     activeExercise,
     exerciseName,
     handleStartTimer,
@@ -39,23 +40,23 @@ export const ActiveWorkoutView = ({navigation}: Props) => {
         />
         <View style={styles.timerContainer}>
           <Text style={styles.exerciseName}>{exerciseName}</Text>
-          <Text>{activeSet}</Text>
+          <Text>{`Set ${activeSet + 1} of ${lastSet + 1} `}</Text>
 
           <CountdownCircleTimer
+            key={`${activeExercise}${activeSet}`}
             colors={DefaultTheme.colors.primary as any}
             initialRemainingTime={setRestTime - elapsedTime}
             duration={setRestTime}
             isPlaying={isTimerRunning}>
             {() => <Text>{setRestTime - elapsedTime}</Text>}
           </CountdownCircleTimer>
+          <Button
+            mode="contained"
+            style={styles.button}
+            onPress={handleStartTimer}>
+            Rest
+          </Button>
         </View>
-
-        <Button
-          mode="contained"
-          style={styles.button}
-          onPress={handleStartTimer}>
-          Rest
-        </Button>
       </View>
     )
   );
