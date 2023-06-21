@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {Image, View, Text, KeyboardAvoidingView} from 'react-native';
-import {FAB, IconButton, TextInput} from 'react-native-paper';
+import {FAB, TextInput} from 'react-native-paper';
 import {
   ExerciseSet,
   MainStackList,
@@ -34,55 +34,65 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
   };
 
   const handleAddSet = () => {
-    setSets(oldValue => [...oldValue, oldValue[oldValue.length - 1]]);
+    const oldSets = JSON.parse(JSON.stringify(sets));
+    const lastSet = JSON.parse(JSON.stringify(sets[sets.length - 1]));
+    setSets([...oldSets, lastSet]);
   };
 
-  async function handleSaveExerciseToRoutine() {
-    const newExercise: WorkoutExerciseType = {
-      exercise: workoutExercise.exercise,
-      sets: sets,
-    };
-    try {
-      const data = await AsyncStorage.getItem(routineId.toString());
-      const routine: WorkoutRoutineType = data
-        ? JSON.parse(data)
-        : {exercises: []};
-
-      const exerciseIndex = routine.exercises?.findIndex(item => {
-        return item.exercise.id === newExercise.exercise.id;
-      });
-
-      if (
-        typeof exerciseIndex !== 'undefined' &&
-        exerciseIndex >= 0 &&
-        !!routine?.exercises
-      ) {
-        routine.exercises[exerciseIndex] = newExercise;
-      } else if (routine.exercises && routine.exercises.length > 0) {
-        routine.exercises.push(newExercise);
-      } else {
-        routine.exercises = [newExercise];
-      }
-
-      await AsyncStorage.setItem(routineId.toString(), JSON.stringify(routine));
-      navigation.navigate('Workout routine', {
-        routineId: routineId,
-        routine: routine,
-        edit: true,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
   useEffect(() => {
-    if (workoutExercise) {
+    navigation.addListener('blur', () => {
+      const newExercise: WorkoutExerciseType = {
+        exercise: workoutExercise.exercise,
+        sets: sets,
+      };
+      AsyncStorage.getItem(routineId.toString())
+        .then(data => {
+          const routine: WorkoutRoutineType = data
+            ? JSON.parse(data)
+            : {exercises: []};
+
+          const exerciseIndex = routine.exercises?.findIndex(item => {
+            return item.exercise.id === newExercise.exercise.id;
+          });
+
+          if (
+            typeof exerciseIndex !== 'undefined' &&
+            exerciseIndex >= 0 &&
+            !!routine?.exercises
+          ) {
+            routine.exercises[exerciseIndex] = newExercise;
+          } else if (routine.exercises && routine.exercises.length > 0) {
+            routine.exercises.push(newExercise);
+          } else {
+            routine.exercises = [newExercise];
+          }
+          AsyncStorage.setItem(routineId.toString(), JSON.stringify(routine))
+            .then(() => {
+              navigation.navigate('Workout routine', {
+                routineId: routineId,
+                routine: routine,
+                edit: true,
+              });
+            })
+            .catch(error => {
+              console.log('error', error);
+            });
+        })
+        .catch(error => {
+          console.log('error', error);
+        });
+    });
+  }, [navigation, routineId, sets, workoutExercise.exercise]);
+
+  useEffect(() => {
+    if (workoutExercise?.exercise?.name) {
       navigation.setOptions({
         title:
           workoutExercise?.exercise.name.charAt(0).toUpperCase() +
           workoutExercise?.exercise.name.slice(1),
       });
     }
-  }, [workoutExercise, navigation]);
+  }, [workoutExercise?.exercise?.name, navigation]);
 
   return (
     <View style={styles?.container}>
@@ -127,18 +137,7 @@ export const AddExerciseToRoutine = ({route, navigation}: Props) => {
           );
         }}
       />
-
-      <View
-        style={{
-          width: '100%',
-          gap: 2,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-        }}>
-        <IconButton onPress={handleAddSet} icon={'plus'} />
-        <FAB onPress={handleSaveExerciseToRoutine} label="Save" />
-      </View>
+      <FAB style={styles.fab} onPress={handleAddSet} icon="plus" />
     </View>
   );
 };

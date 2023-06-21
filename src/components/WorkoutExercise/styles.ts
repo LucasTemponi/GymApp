@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     marginHorizontal: 20,
     marginVertical: 5,
+    overflow: 'hidden',
   },
   fab: {
     position: 'absolute',
@@ -35,9 +36,11 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+    overflow: 'hidden',
   },
   menuButton: {
     display: 'flex',
     marginTop: 17,
   },
+  setContainer: {display: 'flex', flexDirection: 'row', gap: 1},
 });

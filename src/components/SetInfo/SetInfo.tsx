@@ -1,6 +1,6 @@
 import React from 'react';
 import {ExerciseSet} from '../../types/types';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {weightUnit} from '../../consts/units';
 import {DefaultTheme} from 'react-native-paper';
 
@@ -9,12 +9,7 @@ type Props = {
 };
 export const SetInfo = ({set}: Props) => {
   return (
-    <View
-      style={{
-        marginRight: 5,
-        padding: 2,
-        // backgroundColor: DefaultTheme.colors.secondary,
-      }}>
+    <View style={styles.container}>
       <View>
         <Text
           style={{
@@ -33,3 +28,11 @@ export const SetInfo = ({set}: Props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginRight: 5,
+    padding: 2,
+    // backgroundColor: DefaultTheme.colors.secondary,
+  },
+});
