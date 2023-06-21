@@ -1,13 +1,16 @@
 import React, {useCallback} from 'react';
-import {FlatList, Image, View} from 'react-native';
+import {FlatList, View} from 'react-native';
 
-import {ActivityIndicator, Text, TextInput} from 'react-native-paper';
+import {ActivityIndicator, TextInput} from 'react-native-paper';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 
 import {styles} from './styles';
+import {Exercise, MainStackList, TabStackList} from '../../types/types';
+import {ExerciseCard} from '../../components/ExerciseCard/ExerciseCard';
+import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
+import {CompositeScreenProps} from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Exercise, ScreensStackList} from '../../types/types';
 
 const instance = axios.create({
   baseURL: 'https://exercisedb.p.rapidapi.com/exercises',
@@ -18,9 +21,12 @@ const instance = axios.create({
   },
 });
 
-type Props = NativeStackScreenProps<ScreensStackList, 'Exercises'>;
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<MainStackList, 'Exercises'>,
+  MaterialBottomTabScreenProps<TabStackList, 'Exercices'>
+>;
 
-export const Home = ({route, navigation}: Props) => {
+export const Exercises = ({route, navigation}: Props) => {
   const [exercices, setExercices] = useState<Exercise[]>();
   const [query, setQuery] = useState('');
   const {state, routineId} = route.params;
@@ -67,21 +73,16 @@ export const Home = ({route, navigation}: Props) => {
             right={<TextInput.Icon icon="magnify" />}
           />
           <FlatList
+            numColumns={2}
+            style={{width: '100%'}}
             data={exercices?.filter(exercice =>
               exercice.name.includes(query.toLowerCase()),
             )}
             renderItem={({item}) => (
-              <View style={styles.exerciceContainer}>
-                <Image
-                  style={styles.tinyLogo}
-                  source={{
-                    uri: item.gifUrl,
-                  }}
-                />
-                <Text onPress={() => handleExercisePress(item)}>
-                  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-                </Text>
-              </View>
+              <ExerciseCard
+                exercise={item}
+                onPress={() => handleExercisePress(item)}
+              />
             )}
           />
         </>
@@ -90,4 +91,4 @@ export const Home = ({route, navigation}: Props) => {
   );
 };
 
-export default Home;
+export default Exercises;

@@ -20,8 +20,12 @@ type ActiveWorkoutProps = {
   handleNextExercise: () => void;
   handleNextSet: () => void;
   activeSet: number;
+  lastSet: number;
+  setRestTime: number;
   activeExercise: number;
+  exerciseName: string;
   elapsedTime: number;
+  isTimerRunning: boolean;
 };
 
 const ActiveWorkout = createContext<ActiveWorkoutProps>({
@@ -32,8 +36,12 @@ const ActiveWorkout = createContext<ActiveWorkoutProps>({
   handleNextExercise: () => {},
   handleNextSet: () => {},
   activeSet: 0,
+  lastSet: 0,
+  setRestTime: 0,
   activeExercise: 0,
+  exerciseName: '',
   elapsedTime: 0,
+  isTimerRunning: false,
 });
 
 type Props = {
@@ -136,23 +144,23 @@ const ActiveWorkoutContext = ({children}: Props) => {
 
     notifee.displayNotification({
       id: 'working-out',
-      title: `<p style="color: #4caf50;"><b>${exerciseName}</b></p>`,
-      subtitle: currentSet.toString(),
-      body: `${setRestTime - elapsedTime} segundos`,
+      title: `<p style="color: #6750a4;"><b>${exerciseName}</b> - Set ${
+        currentSet + 1
+      } of ${lastSet + 1} </p>`,
+      // subtitle: currentSet.toString(),
+      body: `${setRestTime - elapsedTime} seconds`,
       android: {
         channelId,
         lightUpScreen: elapsedTime - setRestTime === 0,
         asForegroundService: true,
         vibrationPattern: [100, 200, 300, 400, 500, 400, 300, 200],
-        color: '#4caf50',
+        color: '#6750a4',
+        smallIcon: 'ic_launcher',
+        // circularLargeIcon: true,
         actions: [
           {
-            title: '<b>Dance</b> &#128111;',
+            title: '<b>Rest</b>',
             pressAction: {id: 'start'},
-          },
-          {
-            title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
-            pressAction: {id: 'cry'},
           },
         ],
       },
@@ -195,7 +203,9 @@ const ActiveWorkoutContext = ({children}: Props) => {
   };
 
   const handlePause = () => {
-    if (countRef.current) clearTimeout(countRef.current);
+    if (countRef.current) {
+      clearTimeout(countRef.current);
+    }
     setIsTimerRunning(false);
   };
 
@@ -232,8 +242,12 @@ const ActiveWorkoutContext = ({children}: Props) => {
         handleNextExercise,
         handleNextSet,
         activeSet: currentSet,
+        lastSet,
+        setRestTime,
         activeExercise: currentExercise,
+        exerciseName,
         elapsedTime,
+        isTimerRunning,
       }}>
       {children}
     </ActiveWorkout.Provider>

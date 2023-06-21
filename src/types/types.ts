@@ -1,3 +1,5 @@
+import {NavigatorScreenParams} from '@react-navigation/native';
+
 export type Exercise = {
   equipment: string;
   gifUrl: string;
@@ -12,8 +14,16 @@ export type ExerciseSet = {
   restTime: number;
 };
 
-export type ScreensStackList = {
-  Routines: undefined;
+export type TabStackList = {
+  Exercices: {
+    state: 'viewing' | 'addingToRoutine';
+    routineId?: number;
+  };
+  Workouts: undefined;
+};
+
+export type MainStackList = {
+  Base: NavigatorScreenParams<TabStackList>;
   Exercises: {
     state: 'viewing' | 'addingToRoutine';
     routineId?: number;
@@ -25,16 +35,23 @@ export type ScreensStackList = {
     edit?: boolean;
   };
   'Add to routine': {workoutExercise: WorkoutExerciseType; routineId: number};
-  'Workig out': undefined;
+  'Working out': undefined;
 };
 
-export type BottomStackList = {
-  Home: {
-    state: 'viewing' | 'addingToRoutine';
-    routineId?: number;
-  };
-  Workouts: undefined;
-};
+// export type ScreensStackList = {
+//   Routines: undefined;
+//   Exercises: {
+//     state: 'viewing' | 'addingToRoutine';
+//     routineId?: number;
+//   };
+//   'Exercise Details': {exercise: Exercise};
+//   'Workout routine': {
+//     routine?: WorkoutRoutineType;
+//     routineId: number;
+//     edit?: boolean;
+//   };
+//   'Add to routine': {workoutExercise: WorkoutExerciseType; routineId: number};
+// };
 
 export type WorkoutExerciseType = {
   exercise: Exercise;
