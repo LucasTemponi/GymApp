@@ -5,7 +5,10 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainStackList} from '../../types/types';
 import {Button, DefaultTheme, Text} from 'react-native-paper';
 import {Image, View} from 'react-native';
-import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
+import {
+  ColorFormat,
+  CountdownCircleTimer,
+} from 'react-native-countdown-circle-timer';
 import {styles} from './styles';
 
 type Props = NativeStackScreenProps<MainStackList, 'Working out'>;
@@ -43,8 +46,8 @@ export const ActiveWorkoutView = ({navigation}: Props) => {
           <Text>{`Set ${activeSet + 1} of ${lastSet + 1} `}</Text>
 
           <CountdownCircleTimer
-            key={`${activeExercise}${activeSet}`}
-            colors={DefaultTheme.colors.primary as any}
+            key={`${activeExercise}-${activeSet}`}
+            colors={DefaultTheme.colors.primary as ColorFormat}
             initialRemainingTime={setRestTime - elapsedTime}
             duration={setRestTime}
             isPlaying={isTimerRunning}>

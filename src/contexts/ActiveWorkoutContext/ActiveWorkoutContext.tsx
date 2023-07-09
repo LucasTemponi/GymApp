@@ -120,10 +120,10 @@ const ActiveWorkoutContext = ({children}: Props) => {
         if (elapsedTime < setRestTime) {
           setElapsedTime(oldValue => oldValue + 1);
         } else {
-          handleNextSet();
           clearTimeout(countRef.current);
           setIsTimerRunning(false);
           setElapsedTime(0);
+          handleNextSet();
         }
       }, 1000);
     }
