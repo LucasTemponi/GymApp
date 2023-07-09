@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
   searchBox: {
     width: '100%',
     marginBottom: 10,
+    marginTop: 10,
   },
   exerciceContainer: {
     marginVertical: 1,
@@ -27,5 +28,12 @@ export const styles = StyleSheet.create({
   logo: {
     width: 66,
     height: 58,
+  },
+  filterContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 15,
+    width: '100%',
+    marginBottom: 10,
   },
 });
