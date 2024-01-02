@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {View, FlatList} from 'react-native';
 import {FAB, TextInput} from 'react-native-paper';
 import {WorkoutExercise} from '../../components/WorkoutExercise/WorkoutExercise';
 import {MainStackList, WorkoutRoutineType} from '../../types/types';

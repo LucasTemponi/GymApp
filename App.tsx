@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider} from 'react-native-paper';
@@ -19,52 +13,76 @@ import {AddExerciseToRoutine} from './src/views/AddExerciseToRoutine/AddExercise
 import {ExerciceDetails} from './src/views/ExerciceDetails/ExercicesDetails';
 import {WorkoutRoutine} from './src/views/WorkoutRoutine/ WorkoutRoutine';
 import Workouts from './src/views/Workouts/Workoust';
+import {Dimensions} from 'react-native';
+import TimerView from './src/views/TimerView/TimerView';
+import TimerContext from './src/contexts/TimerContext/TimerContext';
 
 const Tab = createMaterialBottomTabNavigator<TabStackList>();
 const Stack = createNativeStackNavigator<MainStackList>();
 
-const TabScreens = () => (
-  <Tab.Navigator barStyle={{height: 75}} activeColor="white">
-    <Tab.Screen
-      name="Exercices"
-      component={Exercises as any}
-      initialParams={{state: 'viewing'}}
-      options={{tabBarIcon: 'kettlebell'}}
-    />
-    <Tab.Screen
-      name="Workouts"
-      component={Workouts as any}
-      options={{tabBarIcon: 'clipboard-list-outline'}}
-    />
-  </Tab.Navigator>
-);
+const TabScreens = () => {
+  const windowHeight = Dimensions.get('window').height;
+
+  return (
+    <Tab.Navigator
+      barStyle={{height: 70}}
+      safeAreaInsets={{bottom: 0, top: 0}}
+      activeColor="white"
+      compact>
+      <Tab.Screen
+        name="Exercices"
+        component={Exercises as any}
+        initialParams={{state: 'viewing'}}
+        options={{tabBarIcon: 'weight-lifter'}}
+      />
+      <Tab.Screen
+        name="Timer"
+        component={TimerView as any}
+        options={{tabBarIcon: 'timer'}}
+      />
+      <Tab.Screen
+        name="Workouts"
+        component={Workouts as any}
+        options={{tabBarIcon: 'clipboard-list-outline'}}
+      />
+    </Tab.Navigator>
+  );
+};
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <PaperProvider>
-        <ActiveWorkoutContext>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen
-                options={{headerShown: false}}
-                name="Base"
-                component={TabScreens}
-              />
-              <Stack.Screen name="Working out" component={ActiveWorkoutView} />
-              <Stack.Screen
-                name="Add to routine"
-                component={AddExerciseToRoutine}
-              />
-              <Stack.Screen
-                name="Exercise Details"
-                component={ExerciceDetails}
-              />
-              <Stack.Screen name="Workout routine" component={WorkoutRoutine} />
-              <Stack.Screen name="Exercises" component={Exercises} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </ActiveWorkoutContext>
+        <TimerContext>
+          <ActiveWorkoutContext>
+            <NavigationContainer>
+              <Stack.Navigator>
+                <Stack.Screen
+                  options={{headerShown: false}}
+                  name="Base"
+                  component={TabScreens}
+                />
+                <Stack.Screen
+                  name="Working out"
+                  component={ActiveWorkoutView}
+                />
+                <Stack.Screen
+                  name="Add to routine"
+                  component={AddExerciseToRoutine}
+                />
+                <Stack.Screen
+                  name="Exercise Details"
+                  component={ExerciceDetails}
+                />
+                <Stack.Screen
+                  name="Workout routine"
+                  component={WorkoutRoutine}
+                />
+                <Stack.Screen name="Exercises" component={Exercises} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </ActiveWorkoutContext>
+        </TimerContext>
       </PaperProvider>
     </SafeAreaProvider>
   );

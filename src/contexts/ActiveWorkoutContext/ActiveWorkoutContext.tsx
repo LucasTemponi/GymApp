@@ -56,7 +56,7 @@ const ActiveWorkoutContext = ({children}: Props) => {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [currentExercise, setCurrentExercise] = useState<number>(0);
   const [currentSet, setCurrentSet] = useState<number>(0);
-  const countRef = useRef<number>(0);
+  const countRef = useRef<NodeJS.Timeout>();
 
   const lastExercise = useMemo(() => {
     if (activeWorkout?.exercises) {
@@ -101,17 +101,16 @@ const ActiveWorkoutContext = ({children}: Props) => {
   notifee.registerForegroundService(() => {
     return new Promise(() => {
       // Long running task...
+      notifee.onBackgroundEvent(async ({type, detail}) => {
+        if (
+          type === EventType.ACTION_PRESS &&
+          detail.pressAction &&
+          detail.pressAction.id === 'start'
+        ) {
+          setIsTimerRunning(true);
+        }
+      });
     });
-  });
-
-  notifee.onBackgroundEvent(async ({type, detail}) => {
-    if (
-      type === EventType.ACTION_PRESS &&
-      detail.pressAction &&
-      detail.pressAction.id === 'start'
-    ) {
-      setIsTimerRunning(true);
-    }
   });
 
   useEffect(() => {

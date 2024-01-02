@@ -5,7 +5,7 @@ import {ActivityIndicator, FAB} from 'react-native-paper';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
 import {styles} from './styles';
 import {useFocusEffect} from '@react-navigation/native';
-import {FlatList} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native';
 import {useActiveWorkout} from '../../contexts/ActiveWorkoutContext/ActiveWorkoutContext';
 import {WorkoutListItem} from '../../components/WorkoutListItem/WorkoutListItem';
 

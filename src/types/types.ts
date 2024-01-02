@@ -20,6 +20,7 @@ export type TabStackList = {
     routineId?: number;
   };
   Workouts: undefined;
+  Timer: undefined;
 };
 
 export type MainStackList = {

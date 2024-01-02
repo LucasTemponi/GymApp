@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
-import {Image, View, Text, KeyboardAvoidingView} from 'react-native';
+import {Image, View, Text, KeyboardAvoidingView, FlatList} from 'react-native';
 import {FAB, TextInput} from 'react-native-paper';
 import {
   ExerciseSet,
@@ -10,7 +10,6 @@ import {
   WorkoutRoutineType,
 } from '../../types/types';
 import {styles} from './styles';
-import {FlatList} from 'react-native-gesture-handler';
 
 type Props = NativeStackScreenProps<MainStackList, 'Add to routine'>;
 
