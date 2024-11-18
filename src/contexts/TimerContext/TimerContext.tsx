@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {WorkoutRoutineType} from '../../types/types';
+import BackgroundTimer, {TimeoutId} from 'react-native-background-timer';
 import notifee, {EventType} from '@notifee/react-native';
 import {Vibration} from 'react-native';
 
@@ -48,7 +48,7 @@ const TimerContext = ({children}: Props) => {
     title: '',
   });
 
-  const countRef = useRef<NodeJS.Timeout>();
+  const countRef = useRef<TimeoutId>();
 
   notifee.registerForegroundService(() => {
     return new Promise(() => {
@@ -82,7 +82,7 @@ const TimerContext = ({children}: Props) => {
         asForegroundService: true,
         vibrationPattern: [100, 200, 300, 400, 500, 400, 300, 200],
         color: '#6750a4',
-        smallIcon: 'ic_launcher',
+        smallIcon: 'ic_stat_name',
         // circularLargeIcon: true,
         actions: [
           {
@@ -99,7 +99,7 @@ const TimerContext = ({children}: Props) => {
       !timerTime ? setTimerIsActive(false) : showNotification();
     }
     if (isTimerRunning) {
-      countRef.current = setTimeout(() => {
+      countRef.current = BackgroundTimer.setTimeout(() => {
         if (elapsedTime < timerTime - 1) {
           setElapsedTime(oldValue => oldValue + 1);
         } else {
@@ -113,7 +113,7 @@ const TimerContext = ({children}: Props) => {
 
     return () => {
       if (countRef.current) {
-        clearTimeout(countRef.current);
+        BackgroundTimer.clearTimeout(countRef.current);
       }
     };
   }, [isTimerRunning, elapsedTime, timerTime]);

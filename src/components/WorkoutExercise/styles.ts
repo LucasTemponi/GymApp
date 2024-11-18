@@ -11,6 +11,12 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     overflow: 'hidden',
+    shadowOffset: {
+      width: 5,
+      height: 2,
+    },
+    shadowColor: '#fff',
+    shadowOpacity: 0.25,
   },
   imageContainer: {
     overflow: 'hidden',

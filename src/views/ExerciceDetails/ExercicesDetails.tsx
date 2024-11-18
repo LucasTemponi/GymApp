@@ -1,7 +1,7 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
-import {Image, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import {Image, View, ScrollView} from 'react-native';
+import {Text, List} from 'react-native-paper';
 import {MainStackList} from '../../types/types';
 import {styles} from './styles';
 
@@ -18,11 +18,30 @@ export const ExerciceDetails = ({navigation, route}: Props) => {
     }
   }, [exercise, navigation]);
 
+  console.log(exercise);
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Image style={styles.imageContainer} source={{uri: exercise?.gifUrl}} />
-      <Text>{`Target: ${exercise?.target}`}</Text>
-      <Text>{`Equipment: ${exercise?.equipment}`}</Text>
-    </View>
+      <View style={styles.card}>
+        <Text numberOfLines={1} style={styles.title}>{`Target: `}</Text>
+        <Text>{exercise?.target}</Text>
+        <Text numberOfLines={1} style={styles.subtitle}>{`Secondary: `}</Text>
+        <Text>{`${exercise?.secondaryMuscles}`}</Text>
+      </View>
+
+      <View style={styles.card}>
+        <Text numberOfLines={1} style={styles.title}>{`Equipment: `}</Text>
+        <Text>{`${exercise?.equipment}`}</Text>
+      </View>
+      <View style={styles.card}>
+        <Text numberOfLines={1} style={styles.title}>
+          Instructions
+        </Text>
+        {exercise?.instructions?.map((instruction, index) => (
+          <Text key={index}>{`${index + 1} - ${instruction}`}</Text>
+        ))}
+      </View>
+    </ScrollView>
   );
 };

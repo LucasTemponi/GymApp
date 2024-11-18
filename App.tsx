@@ -16,9 +16,18 @@ import Workouts from './src/views/Workouts/Workoust';
 import {Dimensions} from 'react-native';
 import TimerView from './src/views/TimerView/TimerView';
 import TimerContext from './src/contexts/TimerContext/TimerContext';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client';
 
 const Tab = createMaterialBottomTabNavigator<TabStackList>();
 const Stack = createNativeStackNavigator<MainStackList>();
+
+const queryClient = new QueryClient();
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+});
 
 const TabScreens = () => {
   const windowHeight = Dimensions.get('window').height;
@@ -54,34 +63,41 @@ export default function App() {
     <SafeAreaProvider>
       <PaperProvider>
         <TimerContext>
-          <ActiveWorkoutContext>
-            <NavigationContainer>
-              <Stack.Navigator>
-                <Stack.Screen
-                  options={{headerShown: false}}
-                  name="Base"
-                  component={TabScreens}
-                />
-                <Stack.Screen
-                  name="Working out"
-                  component={ActiveWorkoutView}
-                />
-                <Stack.Screen
-                  name="Add to routine"
-                  component={AddExerciseToRoutine}
-                />
-                <Stack.Screen
-                  name="Exercise Details"
-                  component={ExerciceDetails}
-                />
-                <Stack.Screen
-                  name="Workout routine"
-                  component={WorkoutRoutine}
-                />
-                <Stack.Screen name="Exercises" component={Exercises} />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </ActiveWorkoutContext>
+          <PersistQueryClientProvider
+            persistOptions={{
+              persister: asyncStoragePersister,
+              maxAge: 1000 * 60 * 60 * 24 * 7,
+            }}
+            client={queryClient}>
+            <ActiveWorkoutContext>
+              <NavigationContainer>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    options={{headerShown: false}}
+                    name="Base"
+                    component={TabScreens}
+                  />
+                  <Stack.Screen
+                    name="Working out"
+                    component={ActiveWorkoutView}
+                  />
+                  <Stack.Screen
+                    name="Add to routine"
+                    component={AddExerciseToRoutine}
+                  />
+                  <Stack.Screen
+                    name="Exercise Details"
+                    component={ExerciceDetails}
+                  />
+                  <Stack.Screen
+                    name="Workout routine"
+                    component={WorkoutRoutine}
+                  />
+                  <Stack.Screen name="Exercises" component={Exercises} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </ActiveWorkoutContext>
+          </PersistQueryClientProvider>
         </TimerContext>
       </PaperProvider>
     </SafeAreaProvider>

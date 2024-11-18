@@ -12,23 +12,42 @@ import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-ta
 import {CompositeScreenProps} from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {FilterChip} from '../../components/FilterChip/FilterChip';
-
-const instance = axios.create({
-  baseURL: 'https://exercisedb.p.rapidapi.com/exercises',
-  timeout: 1000,
-  headers: {
-    'X-RapidAPI-Key': '16aebbac70msh81aa02278bca4ddp179321jsncc2788d06127',
-    'X-RapidAPI': 'Host:exercisedb.p.rapidapi.com',
-  },
-});
+import {
+  getBodyParts,
+  getEquipments,
+  getExercises,
+} from '../../services/exercises-db';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<MainStackList, 'Exercises'>,
   MaterialBottomTabScreenProps<TabStackList, 'Exercices'>
 >;
 
+const getUniqueItems = <T, U extends keyof T>(arr?: T[], key?: U) => {
+  if (!arr) {
+    return [];
+  }
+  const uniqueItems: string[] = [];
+
+  if (typeof arr[0] === 'string') {
+    for (let i = 0; i < arr.length; i++) {
+      if (!uniqueItems.includes(arr[i] as string)) {
+        uniqueItems.push(arr[i] as string);
+      }
+    }
+  } else if (key) {
+    for (let i = 0; i < arr.length; i++) {
+      if (!uniqueItems.includes(arr[i][key] as string)) {
+        uniqueItems.push(arr[i][key] as string);
+      }
+    }
+  }
+  return uniqueItems;
+};
+
 export const Exercises = ({route, navigation}: Props) => {
-  const [exercices, setExercices] = useState<Exercise[]>();
+  // const [exercices, setExercices] = useState<Exercise[]>();
   const [query, setQuery] = useState<RegExp>();
   const [equipmentQuery, setEquipmentQuery] = useState<string[]>();
   const [targetQuery, setTargetQuery] = useState<string[]>();
@@ -40,39 +59,55 @@ export const Exercises = ({route, navigation}: Props) => {
     setQuery(regexQuery);
   };
 
-  const getUniqueItems = <T extends Record<string, string> | string>(
-    arr?: T[],
-    key?: T extends Record<string, string> ? keyof T : never,
-  ) => {
-    if (!arr) {
-      return [];
-    }
-    const uniqueItems: string[] = [];
-
-    if (typeof arr[0] === 'string') {
-      for (let i = 0; i < arr.length; i++) {
-        if (!uniqueItems.includes(arr[i] as string)) {
-          uniqueItems.push(arr[i] as string);
+  const {data, isLoading, fetchNextPage, isFetchingNextPage} = useInfiniteQuery(
+    {
+      queryKey: ['exercises'],
+      initialPageParam: 1,
+      queryFn: async ({pageParam}) => {
+        console.log('Chamou getExercises', pageParam);
+        const response = await getExercises(pageParam);
+        return response.data;
+      },
+      getNextPageParam: (lastPage, _, lastPageParams) => {
+        if (lastPage.length < 10) {
+          return undefined;
         }
-      }
-    } else if (key) {
-      for (let i = 0; i < arr.length; i++) {
-        if (!uniqueItems.includes(arr[i][key] as string)) {
-          uniqueItems.push(arr[i][key] as string);
-        }
-      }
-    }
-    return uniqueItems;
-  };
+        return lastPageParams + 1;
+      },
+      gcTime: Infinity,
+      staleTime: Infinity,
+    },
+  );
+  const {data: bodyParts} = useQuery({
+    queryKey: ['bodyParts'],
+    queryFn: async () => {
+      const response = await getBodyParts();
+      return response.data;
+    },
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
-  const equipments = useMemo(
-    () => getUniqueItems(exercices, 'equipment'),
-    [exercices],
-  );
-  const bodyParts = useMemo(
-    () => getUniqueItems(exercices, 'target'),
-    [exercices],
-  );
+  const {data: equipments} = useQuery({
+    queryKey: ['equipments'],
+    queryFn: async () => {
+      const response = await getEquipments();
+      return response.data;
+    },
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
+
+  const exercices = useMemo(() => data?.pages.flat(), [data]);
+
+  // const equipments = useMemo(
+  //   () => getUniqueItems(exercices, 'equipment'),
+  //   [exercices],
+  // );
+  // const bodyParts = useMemo(
+  //   () => getUniqueItems(exercices, 'target'),
+  //   [exercices],
+  // );
 
   const handleExercisePress = useCallback(
     (exercise: Exercise) => {
@@ -108,19 +143,18 @@ export const Exercises = ({route, navigation}: Props) => {
     return filteredList;
   }, [equipmentQuery, exercices, query, targetQuery]);
 
-  useEffect(() => {
-    instance
-      .get('')
-      .then(result => {
-        setExercices(result.data);
-        setLoading(false);
-      })
-      .catch(error => console.log(error));
-  }, []);
+  // useEffect(() => {
+  //   getExercises()
+  //     .then(result => {
+  //       setExercices(result.data);
+  //       setLoading(false);
+  //     })
+  //     .catch(error => console.log(error));
+  // }, []);
 
   return (
     <View style={styles.container}>
-      {loading ? (
+      {isLoading || loading ? (
         <ActivityIndicator />
       ) : (
         <>
@@ -134,20 +168,27 @@ export const Exercises = ({route, navigation}: Props) => {
             <FilterChip
               title="Muscle group"
               activeFilters={targetQuery}
-              options={bodyParts}
+              options={bodyParts || []}
               onChange={selectedItems => setTargetQuery(selectedItems)}
             />
             <FilterChip
               title="Equipment"
               activeFilters={equipmentQuery}
-              options={equipments}
+              options={equipments || []}
               onChange={selectedItems => setEquipmentQuery(selectedItems)}
             />
           </View>
           <FlatList
+            onRefresh={() => {}}
+            refreshing={isLoading}
             numColumns={2}
+            ListFooterComponent={
+              isFetchingNextPage ? <ActivityIndicator /> : null
+            }
             style={{width: '100%'}}
             data={filteredExercices}
+            onEndReached={() => fetchNextPage()}
+            onEndReachedThreshold={0.5}
             renderItem={({item}) => (
               <ExerciseCard
                 exercise={item}
